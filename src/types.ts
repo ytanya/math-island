@@ -1,24 +1,37 @@
-export type SkillId = 'counting' | 'comparing' | 'addSub' | 'placeValue'
-
-export interface Question {
+export interface TreasureQuestion {
   id: string
-  skillId: SkillId
   prompt: string
   choices: number[]
   answer: number
   visualCount?: number
 }
 
-export interface SkillProgress {
-  skillId: SkillId
-  attempts: number
-  correct: number
-  mastered: boolean
+export interface CurriculumUnit {
+  id: string
+  name: string
+  mapLeft: string
+  mapTop: string
+  questions: TreasureQuestion[]
+}
+
+export interface Curriculum {
+  id: string
+  name: string
+  units: CurriculumUnit[]
+}
+
+export interface TreasureProgress {
+  completed: boolean
+  coinsEarned: number
+}
+
+export interface LevelProgress {
+  treasures: Record<string, TreasureProgress>
+  currentAvailableTreasureId: string
 }
 
 export interface ChildProfile {
   name: string
   bells: number
-  badges: SkillId[]
-  progress: Record<SkillId, SkillProgress>
+  levelProgress: Record<string, LevelProgress>
 }
