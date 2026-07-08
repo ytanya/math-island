@@ -44,10 +44,6 @@ export function QuizScreen({
   }, [profile])
 
   const handleChoiceClick = (choice: number) => {
-    if (answered) {
-      return
-    }
-
     const isCorrect = choice === currentQuestion.answer
     const wasMastered = activeProfile.progress[skillId].mastered
     const updatedProfile = recordAnswer(activeProfile, skillId, isCorrect)
@@ -55,12 +51,15 @@ export function QuizScreen({
     const message = isCorrect ? 'Great job! 🎉' : 'Try again!'
 
     setSelectedChoice(choice)
-    setAnswered(true)
     setFeedbackMessage(justMastered ? 'Skill mastered! 🌟' : message)
     setActiveProfile(updatedProfile)
     setCorrectCount((count) => count + (isCorrect ? 1 : 0))
     onProfileChange(updatedProfile)
     saveProfile(updatedProfile)
+
+    if (isCorrect) {
+      setAnswered(true)
+    }
 
     if (justMastered) {
       playAchievementSound()
