@@ -204,20 +204,29 @@ interface ChildProfile {
 
 ### Adding a New Curriculum
 
-**Step 1:** Create curriculum config file
-```
-src/curriculums/scientist-cambridge.json
-```
+**Step 1:** Create a curriculum data file matching the existing `Curriculum` /
+`CurriculumUnit` / `TreasureQuestion` types (e.g.
+`src/curriculums/scientistCambridge.ts`)
 
-**Step 2:** Use same JSON schema as Cambridge Math Book 1
+**Step 2:** Reuse the same shape as Cambridge Math Book 1 — QuizScreen,
+HomeScreen, ParentScreen, App.tsx, and profileStore are all curriculum-agnostic
+over that shape and require no changes to read a differently-sized curriculum
+(unit count and questions-per-unit are both derived from the data, not
+hardcoded)
 
-**Step 3:** No code changes needed
-- Quiz screen reads from config dynamically
+**Step 3:** Wire in a curriculum selector — as built, App.tsx/HomeScreen/etc.
+statically import and reference `CAMBRIDGE_PRIMARY_MATH_BOOK1`, so a second
+curriculum still needs a Level Select screen (see below) that picks which
+curriculum's data to load. The *types and logic* are code-change-free; the
+*which curriculum is active* wiring is not, until that selector exists.
+- Quiz screen reads all curriculum content from data
 - UI/animation/sound logic is curriculum-agnostic
-- User selects curriculum on a Level Select screen (future feature)
+- User selects curriculum on a Level Select screen (future feature — this is
+  the piece that makes "add a curriculum with zero code changes" fully true)
 
 ### Supported Variations
 - Different unit counts (16, 20, 25, etc.)
+- Different question counts per unit (not fixed to 10)
 - Different unit names and question types
 - Different visual assets per curriculum (optional; reuse adventure-island.png by default)
 
@@ -228,8 +237,8 @@ src/curriculums/scientist-cambridge.json
 ```
 Home Screen (Island Map)
     ↓ (tap treasure)
-Quiz Screen (10 questions from config)
-    ↓ (answer all 10)
+Quiz Screen (all questions from the unit's data)
+    ↓ (answer all questions)
 Summary Screen (show score)
     ↓ (click Back to Island)
 Coin Animation (chest → bag) + Sound
@@ -285,7 +294,9 @@ localStorage.setItem('math-island-profile', JSON.stringify(updatedProfile))
 - ✅ Coin sound and unlock sound play in correct sequence
 - ✅ Progress persists across app refreshes
 - ✅ Replayable completed treasures
-- ✅ New curriculum can be added via JSON config only
+- ✅ Curriculum data types (units, questions, unit/question counts) are fully
+  reusable for a new curriculum with no code changes — a curriculum selector
+  (Section 5, Step 3) is still needed to make a second curriculum active
 - ✅ Mobile-responsive (tested on 375px, 768px, 1024px screens)
 
 ---

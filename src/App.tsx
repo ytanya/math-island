@@ -1,17 +1,28 @@
-import { type ComponentProps, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
+import {
+  CAMBRIDGE_PRIMARY_MATH_BOOK1,
+  CAMBRIDGE_PRIMARY_MATH_BOOK1_ID,
+  getNextUnitId,
+} from './curriculums/cambridgePrimaryMathBook1';
 import { HomeScreen } from './screens/HomeScreen';
 import { ParentScreen } from './screens/ParentScreen';
 import { QuizScreen } from './screens/QuizScreen';
-import { loadProfile } from './store/profileStore';
+import { completeTreasure, loadProfile, saveProfile } from './store/profileStore';
 import { isMusicEnabled, startBackgroundMusic } from './utils/sound';
 
-type SkillId = Parameters<ComponentProps<typeof HomeScreen>['onPlaySkill']>[0];
+interface PendingCoinAnimation {
+  unitId: string;
+  coinsEarned: number;
+}
 
 export default function App() {
   const [profile, setProfile] = useState(() => loadProfile());
-  const [activeSkill, setActiveSkill] = useState<SkillId | null>(null);
+  const [activeUnitId, setActiveUnitId] = useState<string | null>(null);
   const [showParents, setShowParents] = useState(false);
+  const [pendingCoinAnimation, setPendingCoinAnimation] = useState<PendingCoinAnimation | null>(
+    null,
+  );
 
   useEffect(() => {
     const startMusicOnFirstGesture = () => {
@@ -31,31 +42,46 @@ export default function App() {
     };
   }, []);
 
-  if (showParents) {
-    return (
-      <ParentScreen
-        profile={profile}
-        onClose={() => setShowParents(false)}
-      />
+  const handleQuizComplete = (unitId: string, coinsEarned: number) => {
+    const nextUnitId = getNextUnitId(CAMBRIDGE_PRIMARY_MATH_BOOK1, unitId);
+    const { profile: updatedProfile, coinsAwarded } = completeTreasure(
+      profile,
+      CAMBRIDGE_PRIMARY_MATH_BOOK1_ID,
+      unitId,
+      coinsEarned,
+      nextUnitId,
     );
+
+    saveProfile(updatedProfile);
+    setProfile(updatedProfile);
+    setActiveUnitId(null);
+
+    if (coinsAwarded > 0) {
+      setPendingCoinAnimation({ unitId, coinsEarned: coinsAwarded });
+    }
+  };
+
+  if (showParents) {
+    return <ParentScreen profile={profile} onClose={() => setShowParents(false)} />;
   }
 
-  if (activeSkill === null) {
+  if (activeUnitId !== null) {
     return (
-      <HomeScreen
-        profile={profile}
-        onOpenParents={() => setShowParents(true)}
-        onPlaySkill={setActiveSkill}
+      <QuizScreen
+        unitId={activeUnitId}
+        onComplete={handleQuizComplete}
+        onExit={() => setActiveUnitId(null)}
       />
     );
   }
 
   return (
-    <QuizScreen
-      skillId={activeSkill}
+    <HomeScreen
+      onCoinAnimationComplete={() => setPendingCoinAnimation(null)}
+      onOpenParents={() => setShowParents(true)}
+      onPlayTreasure={setActiveUnitId}
+      pendingCoinAnimation={pendingCoinAnimation}
       profile={profile}
-      onProfileChange={setProfile}
-      onExit={() => setActiveSkill(null)}
     />
   );
 }

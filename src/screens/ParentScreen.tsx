@@ -1,7 +1,11 @@
 import { Button, Collapse, Table } from 'animal-island-ui'
 import type { TableColumn } from 'animal-island-ui'
 import type { HTMLAttributes } from 'react'
-import type { ChildProfile, SkillId } from '../types'
+import {
+  CAMBRIDGE_PRIMARY_MATH_BOOK1,
+  CAMBRIDGE_PRIMARY_MATH_BOOK1_ID,
+} from '../curriculums/cambridgePrimaryMathBook1'
+import type { ChildProfile } from '../types'
 import './ParentScreen.css'
 
 interface ParentScreenProps {
@@ -9,75 +13,39 @@ interface ParentScreenProps {
   onClose: () => void
 }
 
-interface SkillRow extends Record<string, unknown> {
-  skillId: SkillId
-  skillName: string
-  attempts: number
-  correct: number
-  accuracy: string
-  mastered: string
+interface TreasureRow extends Record<string, unknown> {
+  unitId: string
+  unitName: string
+  coinsEarned: number
+  completed: string
 }
-
-const skillNames: Record<SkillId, string> = {
-  counting: 'Counting',
-  comparing: 'Comparing',
-  addSub: 'Add & Subtract',
-  placeValue: 'Tens & Ones',
-}
-
-const skillOrder: SkillId[] = ['counting', 'comparing', 'addSub', 'placeValue']
 
 const columns: TableColumn[] = [
-  {
-    title: 'Skill name',
-    dataIndex: 'skillName',
-  },
-  {
-    title: 'Attempts',
-    dataIndex: 'attempts',
-    align: 'right',
-  },
-  {
-    title: 'Correct',
-    dataIndex: 'correct',
-    align: 'right',
-  },
-  {
-    title: 'Accuracy %',
-    dataIndex: 'accuracy',
-    align: 'right',
-  },
-  {
-    title: 'Mastered',
-    dataIndex: 'mastered',
-  },
+  { title: 'Unit name', dataIndex: 'unitName' },
+  { title: 'Coins earned', dataIndex: 'coinsEarned', align: 'right' },
+  { title: 'Completed', dataIndex: 'completed' },
 ]
 
-const buildRows = (profile: ChildProfile): SkillRow[] =>
-  skillOrder.map((skillId) => {
-    const progress = profile.progress[skillId]
-    const accuracy =
-      progress.attempts === 0
-        ? 0
-        : Math.round((progress.correct / progress.attempts) * 100)
+const buildRows = (profile: ChildProfile): TreasureRow[] => {
+  const levelProgress = profile.levelProgress[CAMBRIDGE_PRIMARY_MATH_BOOK1_ID]
+
+  return CAMBRIDGE_PRIMARY_MATH_BOOK1.units.map((unit) => {
+    const treasure = levelProgress.treasures[unit.id]
 
     return {
-      skillId,
-      skillName: skillNames[skillId],
-      attempts: progress.attempts,
-      correct: progress.correct,
-      accuracy: `${accuracy}%`,
-      mastered: progress.mastered ? 'Yes' : 'No',
+      unitId: unit.id,
+      unitName: unit.name,
+      coinsEarned: treasure.coinsEarned,
+      completed: treasure.completed ? 'Yes' : 'No',
     }
   })
+}
 
 const getRowProps = (
   record: Record<string, unknown>,
 ): HTMLAttributes<HTMLTableRowElement> => {
-  const rowProps: HTMLAttributes<HTMLTableRowElement> & {
-    'data-testid': string
-  } = {
-    'data-testid': `parent-table-row-${String(record.skillId)}`,
+  const rowProps: HTMLAttributes<HTMLTableRowElement> & { 'data-testid': string } = {
+    'data-testid': `parent-table-row-${String(record.unitId)}`,
   }
 
   return rowProps
@@ -111,7 +79,7 @@ export function ParentScreen({ profile, onClose }: ParentScreenProps) {
             columns={columns}
             dataSource={rows}
             onRow={getRowProps}
-            rowKey="skillId"
+            rowKey="unitId"
           />
         }
         question={<span data-testid="view-details-toggle">View details</span>}

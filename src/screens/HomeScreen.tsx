@@ -1,34 +1,85 @@
+import { useEffect, useState } from 'react'
 import { Button, Tag, Time, Title, Wallet } from 'animal-island-ui'
 import islandMap from '../assets/adventure-island.png'
 import { MusicToggleButton } from '../components/MusicToggleButton'
-import type { ChildProfile, SkillId } from '../types'
-import { playClickSound } from '../utils/sound'
+import {
+  CAMBRIDGE_PRIMARY_MATH_BOOK1,
+  CAMBRIDGE_PRIMARY_MATH_BOOK1_ID,
+  getNextUnitId,
+  getUnitById,
+} from '../curriculums/cambridgePrimaryMathBook1'
+import type { ChildProfile } from '../types'
+import { playClickSound, playCoinSound, playTreasureUnlockSound } from '../utils/sound'
 import './HomeScreen.css'
+
+const COIN_END_LEFT = '50%'
+const COIN_END_TOP = '10%'
+const COIN_ANIMATION_DURATION_MS = 1200
+
+interface PendingCoinAnimation {
+  unitId: string
+  coinsEarned: number
+}
 
 interface HomeScreenProps {
   profile: ChildProfile
-  onPlaySkill: (skillId: SkillId) => void
+  onPlayTreasure: (unitId: string) => void
   onOpenParents?: () => void
+  pendingCoinAnimation: PendingCoinAnimation | null
+  onCoinAnimationComplete: () => void
 }
 
-const skills: Array<{
-  id: SkillId
-  name: string
-  emoji: string
+interface CoinFlightState {
   left: string
   top: string
-}> = [
-  { id: 'addSub', name: 'Add & Subtract', emoji: '➕', left: '26.3%', top: '28.5%' },
-  { id: 'comparing', name: 'Comparing', emoji: '⚖️', left: '52.8%', top: '66.4%' },
-  { id: 'counting', name: 'Counting', emoji: '🔢', left: '49.6%', top: '82.1%' },
-  { id: 'placeValue', name: 'Tens & Ones', emoji: '💯', left: '77.7%', top: '55.3%' },
-]
+}
 
 export function HomeScreen({
   profile,
-  onPlaySkill,
+  onPlayTreasure,
   onOpenParents,
+  pendingCoinAnimation,
+  onCoinAnimationComplete,
 }: HomeScreenProps) {
+  const [coinFlight, setCoinFlight] = useState<CoinFlightState | null>(null)
+  const levelProgress = profile.levelProgress[CAMBRIDGE_PRIMARY_MATH_BOOK1_ID]
+
+  useEffect(() => {
+    if (!pendingCoinAnimation) {
+      return
+    }
+
+    const unit = getUnitById(CAMBRIDGE_PRIMARY_MATH_BOOK1, pendingCoinAnimation.unitId)
+
+    if (!unit) {
+      onCoinAnimationComplete()
+      return
+    }
+
+    playCoinSound()
+    setCoinFlight({ left: unit.mapLeft, top: unit.mapTop })
+
+    const flightTimeout = setTimeout(() => {
+      setCoinFlight({ left: COIN_END_LEFT, top: COIN_END_TOP })
+    }, 20)
+
+    const finishTimeout = setTimeout(() => {
+      const nextUnitId = getNextUnitId(CAMBRIDGE_PRIMARY_MATH_BOOK1, pendingCoinAnimation.unitId)
+
+      if (nextUnitId !== null) {
+        playTreasureUnlockSound()
+      }
+
+      setCoinFlight(null)
+      onCoinAnimationComplete()
+    }, COIN_ANIMATION_DURATION_MS)
+
+    return () => {
+      clearTimeout(flightTimeout)
+      clearTimeout(finishTimeout)
+    }
+  }, [pendingCoinAnimation, onCoinAnimationComplete])
+
   return (
     <main className="home-screen" data-testid="home-screen">
       <section className="home-screen__map" aria-label="Math Island map">
@@ -59,43 +110,63 @@ export function HomeScreen({
           </div>
         </header>
 
-        {skills.map((skill) => {
-          const mastered = profile.progress[skill.id].mastered
+        {CAMBRIDGE_PRIMARY_MATH_BOOK1.units.map((unit) => {
+          const treasure = levelProgress.treasures[unit.id]
+          const isAvailable = unit.id === levelProgress.currentAvailableTreasureId
+          const isCompleted = treasure.completed
+          const isLocked = !isAvailable && !isCompleted
 
           return (
             <div
-              className="home-screen__skill-hotspot"
-              data-testid={`skill-card-${skill.id}`}
-              key={skill.id}
-              style={{ left: skill.left, top: skill.top }}
+              className="home-screen__treasure-hotspot"
+              data-testid={`treasure-${unit.id}`}
+              key={unit.id}
+              style={{ left: unit.mapLeft, top: unit.mapTop }}
             >
-              <Button
-                className="home-screen__skill-marker"
-                data-testid={`play-button-${skill.id}`}
-                htmlType="button"
-                onClick={() => {
-                  playClickSound()
-                  onPlaySkill(skill.id)
-                }}
-                type="primary"
-              >
-                <span className="home-screen__skill-emoji" aria-hidden="true">
-                  {skill.emoji}
-                </span>
-                <span className="home-screen__skill-name">{skill.name}</span>
-                <div className="home-screen__tag-slot">
-                  {mastered ? (
-                    <span data-testid={`mastered-tag-${skill.id}`}>
-                      <Tag color="app-green" size="small">
-                        Mastered
-                      </Tag>
-                    </span>
-                  ) : null}
+              {isLocked ? (
+                <div aria-hidden="true" className="home-screen__treasure-marker--locked">
+                  <span className="home-screen__treasure-emoji">🔒</span>
                 </div>
-              </Button>
+              ) : (
+                <Button
+                  className="home-screen__treasure-marker"
+                  data-testid={`play-button-${unit.id}`}
+                  htmlType="button"
+                  onClick={() => {
+                    playClickSound()
+                    onPlayTreasure(unit.id)
+                  }}
+                  type="primary"
+                >
+                  <span className="home-screen__treasure-emoji" aria-hidden="true">
+                    🗝️
+                  </span>
+                  <span className="home-screen__treasure-name">{unit.name}</span>
+                  <div className="home-screen__tag-slot">
+                    {isCompleted ? (
+                      <span data-testid={`treasure-coins-${unit.id}`}>
+                        <Tag color="app-green" size="small">
+                          {`🪙 ${treasure.coinsEarned}`}
+                        </Tag>
+                      </span>
+                    ) : null}
+                  </div>
+                </Button>
+              )}
             </div>
           )
         })}
+
+        {coinFlight ? (
+          <span
+            aria-hidden="true"
+            className="home-screen__treasure-coin"
+            data-testid="treasure-coin-flight"
+            style={{ left: coinFlight.left, top: coinFlight.top }}
+          >
+            🪙
+          </span>
+        ) : null}
       </section>
     </main>
   )

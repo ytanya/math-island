@@ -1,106 +1,98 @@
 import { beforeEach, describe, expect, it } from 'vitest'
-import type { ChildProfile } from '../types'
-import { loadProfile, recordAnswer, saveProfile } from './profileStore'
+import { CAMBRIDGE_PRIMARY_MATH_BOOK1_ID } from '../curriculums/cambridgePrimaryMathBook1'
+import { completeTreasure, loadProfile, saveProfile } from './profileStore'
 
 describe('profileStore', () => {
   beforeEach(() => {
     localStorage.clear()
   })
 
-  it('returns a valid default profile when localStorage is empty', () => {
-    expect(loadProfile()).toEqual({
-      name: 'Explorer',
-      bells: 0,
-      badges: [],
-      progress: {
-        counting: {
-          skillId: 'counting',
-          attempts: 0,
-          correct: 0,
-          mastered: false,
-        },
-        comparing: {
-          skillId: 'comparing',
-          attempts: 0,
-          correct: 0,
-          mastered: false,
-        },
-        addSub: {
-          skillId: 'addSub',
-          attempts: 0,
-          correct: 0,
-          mastered: false,
-        },
-        placeValue: {
-          skillId: 'placeValue',
-          attempts: 0,
-          correct: 0,
-          mastered: false,
-        },
-      },
-    })
+  it('returns a default profile with all 16 treasures locked except the first', () => {
+    const profile = loadProfile()
+    const levelProgress = profile.levelProgress[CAMBRIDGE_PRIMARY_MATH_BOOK1_ID]
+
+    expect(profile.name).toBe('Explorer')
+    expect(profile.bells).toBe(0)
+    expect(Object.keys(levelProgress.treasures)).toHaveLength(16)
+    expect(levelProgress.currentAvailableTreasureId).toBe('unit_1')
+    expect(levelProgress.treasures.unit_1).toEqual({ completed: false, coinsEarned: 0 })
   })
 
   it('round-trips a saved profile through localStorage', () => {
-    const profile: ChildProfile = {
-      name: 'Ari',
-      bells: 30,
-      badges: ['counting'],
-      progress: {
-        counting: {
-          skillId: 'counting',
-          attempts: 0,
-          correct: 0,
-          mastered: true,
-        },
-        comparing: {
-          skillId: 'comparing',
-          attempts: 2,
-          correct: 1,
-          mastered: false,
-        },
-        addSub: {
-          skillId: 'addSub',
-          attempts: 3,
-          correct: 2,
-          mastered: false,
-        },
-        placeValue: {
-          skillId: 'placeValue',
-          attempts: 4,
-          correct: 3,
-          mastered: false,
+    const profile = loadProfile()
+    const updated = {
+      ...profile,
+      bells: 8,
+      levelProgress: {
+        [CAMBRIDGE_PRIMARY_MATH_BOOK1_ID]: {
+          ...profile.levelProgress[CAMBRIDGE_PRIMARY_MATH_BOOK1_ID],
+          treasures: {
+            ...profile.levelProgress[CAMBRIDGE_PRIMARY_MATH_BOOK1_ID].treasures,
+            unit_1: { completed: true, coinsEarned: 8 },
+          },
+          currentAvailableTreasureId: 'unit_2',
         },
       },
     }
 
-    saveProfile(profile)
+    saveProfile(updated)
 
-    expect(loadProfile()).toEqual(profile)
+    expect(loadProfile()).toEqual(updated)
   })
 
-  it('masters a skill after 8 correct answers in a 10-answer window', () => {
-    const answers = [true, true, false, true, true, true, false, true, true, true]
-    const profile = answers.reduce(
-      (currentProfile, isCorrect) =>
-        recordAnswer(currentProfile, 'counting', isCorrect),
-      loadProfile(),
+  it('completes a treasure: adds bells, marks completed, and unlocks the next treasure', () => {
+    const profile = loadProfile()
+
+    const { profile: updatedProfile, coinsAwarded } = completeTreasure(
+      profile,
+      CAMBRIDGE_PRIMARY_MATH_BOOK1_ID,
+      'unit_1',
+      8,
+      'unit_2',
     )
 
-    expect(profile.progress.counting.mastered).toBe(true)
-    expect(profile.bells).toBe(80)
-    expect(profile.badges).toContain('counting')
+    expect(coinsAwarded).toBe(8)
+    expect(updatedProfile.bells).toBe(8)
+    expect(
+      updatedProfile.levelProgress[CAMBRIDGE_PRIMARY_MATH_BOOK1_ID].treasures.unit_1,
+    ).toEqual({ completed: true, coinsEarned: 8 })
+    expect(
+      updatedProfile.levelProgress[CAMBRIDGE_PRIMARY_MATH_BOOK1_ID].currentAvailableTreasureId,
+    ).toBe('unit_2')
   })
 
-  it('does not mutate the profile passed into recordAnswer', () => {
+  it('does not award bells again when replaying an already-completed treasure', () => {
     const profile = loadProfile()
-    const originalCountingProgress = { ...profile.progress.counting }
+    const { profile: firstCompletion } = completeTreasure(
+      profile,
+      CAMBRIDGE_PRIMARY_MATH_BOOK1_ID,
+      'unit_1',
+      8,
+      'unit_2',
+    )
 
-    const updatedProfile = recordAnswer(profile, 'counting', true)
+    const { profile: secondCompletion, coinsAwarded } = completeTreasure(
+      firstCompletion,
+      CAMBRIDGE_PRIMARY_MATH_BOOK1_ID,
+      'unit_1',
+      10,
+      'unit_2',
+    )
 
-    expect(profile.progress.counting).toEqual(originalCountingProgress)
-    expect(updatedProfile).not.toBe(profile)
-    expect(updatedProfile.progress).not.toBe(profile.progress)
-    expect(updatedProfile.progress.counting).not.toBe(profile.progress.counting)
+    expect(coinsAwarded).toBe(0)
+    expect(secondCompletion.bells).toBe(8)
+    expect(secondCompletion).toEqual(firstCompletion)
+  })
+
+  it('does not mutate the profile passed into completeTreasure', () => {
+    const profile = loadProfile()
+    const originalBells = profile.bells
+
+    completeTreasure(profile, CAMBRIDGE_PRIMARY_MATH_BOOK1_ID, 'unit_1', 8, 'unit_2')
+
+    expect(profile.bells).toBe(originalBells)
+    expect(
+      profile.levelProgress[CAMBRIDGE_PRIMARY_MATH_BOOK1_ID].treasures.unit_1.completed,
+    ).toBe(false)
   })
 })

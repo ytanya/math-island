@@ -233,3 +233,27 @@ export function setMusicEnabled(enabled: boolean) {
     stopBackgroundMusic()
   }
 }
+
+export function playCoinSound() {
+  playTones(
+    [
+      { frequency: 1318.51, startTime: 0, duration: 0.08 },
+      { frequency: 1567.98, startTime: 0.06, duration: 0.16 },
+    ],
+    'square',
+    0.14,
+  )
+}
+
+export function playTreasureUnlockSound() {
+  playTones(
+    [
+      { frequency: 440, startTime: 0, duration: 0.1 },
+      { frequency: 554.37, startTime: 0.08, duration: 0.1 },
+      { frequency: 659.25, startTime: 0.16, duration: 0.1 },
+      { frequency: 880, startTime: 0.24, duration: 0.32 },
+    ],
+    'triangle',
+    0.17,
+  )
+}
