@@ -115,6 +115,7 @@ export function HomeScreen({
           const isAvailable = unit.id === levelProgress.currentAvailableTreasureId
           const isCompleted = treasure.completed
           const isLocked = !isAvailable && !isCompleted
+          const isNextUp = isAvailable && !isCompleted
 
           return (
             <div
@@ -123,13 +124,28 @@ export function HomeScreen({
               key={unit.id}
               style={{ left: unit.mapLeft, top: unit.mapTop }}
             >
+              {isNextUp ? (
+                <span
+                  aria-hidden="true"
+                  className="home-screen__treasure-pointer"
+                  data-testid={`next-up-pointer-${unit.id}`}
+                >
+                  👉
+                </span>
+              ) : null}
+
               {isLocked ? (
                 <div aria-hidden="true" className="home-screen__treasure-marker--locked">
                   <span className="home-screen__treasure-emoji">🔒</span>
                 </div>
               ) : (
                 <Button
-                  className="home-screen__treasure-marker"
+                  className={[
+                    'home-screen__treasure-marker',
+                    isNextUp ? 'home-screen__treasure-marker--next-up' : '',
+                  ]
+                    .filter(Boolean)
+                    .join(' ')}
                   data-testid={`play-button-${unit.id}`}
                   htmlType="button"
                   onClick={() => {

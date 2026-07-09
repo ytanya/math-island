@@ -52,6 +52,29 @@ describe('HomeScreen', () => {
     expect(onPlayTreasure).toHaveBeenCalledTimes(1)
   })
 
+  it('marks only the next-to-play treasure with a non-text pointer indicator', () => {
+    render(
+      <HomeScreen
+        onCoinAnimationComplete={vi.fn()}
+        onPlayTreasure={vi.fn()}
+        pendingCoinAnimation={null}
+        profile={buildProfile()}
+      />,
+    )
+
+    expect(screen.getByTestId('next-up-pointer-unit_2')).not.toBeNull()
+    expect(screen.getByTestId('play-button-unit_2').className).toContain(
+      'home-screen__treasure-marker--next-up',
+    )
+
+    expect(screen.queryByTestId('next-up-pointer-unit_1')).toBeNull()
+    expect(screen.getByTestId('play-button-unit_1').className).not.toContain(
+      'home-screen__treasure-marker--next-up',
+    )
+
+    expect(screen.queryByTestId('next-up-pointer-unit_3')).toBeNull()
+  })
+
   it('flies a coin from the completed treasure to the header and calls onCoinAnimationComplete', () => {
     vi.useFakeTimers()
     const onCoinAnimationComplete = vi.fn()
