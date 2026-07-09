@@ -26,7 +26,7 @@ const buildProfile = (): ChildProfile => ({
 })
 
 describe('HomeScreen', () => {
-  it('renders completed and available treasures as clickable, locked treasures as not rendered', () => {
+  it('renders completed and available treasures as clickable, locked treasures as a non-interactive greyed marker', () => {
     const onPlayTreasure = vi.fn()
 
     render(
@@ -40,7 +40,9 @@ describe('HomeScreen', () => {
 
     expect(screen.getByTestId('play-button-unit_1')).not.toBeNull()
     expect(screen.getByTestId('play-button-unit_2')).not.toBeNull()
+
     expect(screen.queryByTestId('play-button-unit_3')).toBeNull()
+    expect(screen.getByTestId('locked-unit_3')).not.toBeNull()
 
     fireEvent.click(screen.getByTestId('play-button-unit_2'))
 

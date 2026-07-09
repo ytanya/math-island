@@ -32,7 +32,7 @@
 }
 
 .home-screen__header {
-  align-items: flex-start;
+  align-items: center;
   background: rgba(255, 239, 194, 0.9);
   border: 2px solid rgba(118, 76, 31, 0.18);
   border-radius: 18px;
@@ -41,28 +41,20 @@
   flex-shrink: 0;
   gap: 24px;
   justify-content: space-between;
-  margin: 0 auto 18px;
+  margin: 0 auto 14px;
   max-width: 960px;
-  padding: 14px 18px;
+  padding: 10px 20px;
   width: 100%;
 }
 
 .home-screen__title {
-  align-items: flex-start;
+  align-items: center;
   display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.home-screen__time {
-  color: var(--animal-text-color-secondary);
-  opacity: 0.82;
 }
 
 .home-screen__actions {
-  align-items: flex-end;
+  align-items: center;
   display: flex;
-  flex-direction: column;
   gap: 12px;
 }
 
@@ -94,22 +86,30 @@
 @keyframes home-screen-current-treasure-glow {
   0%,
   100% {
-    opacity: 0.7;
+    box-shadow: 0 0 0 0 rgba(255, 153, 0, 0.65), 0 0 16px 6px rgba(255, 187, 0, 0.85);
+    transform: translate(-50%, -50%) translateY(0);
   }
   50% {
-    opacity: 1;
+    box-shadow: 0 0 0 12px rgba(255, 153, 0, 0), 0 0 26px 12px rgba(255, 187, 0, 1);
+    transform: translate(-50%, -50%) translateY(-10px);
   }
 }
 
 .home-screen__treasure-hotspot--current {
-  animation: home-screen-current-treasure-glow 1.4s ease-in-out infinite;
-  background: radial-gradient(
-    circle,
-    rgba(255, 233, 160, 0.95) 0%,
-    rgba(255, 210, 110, 0.6) 55%,
-    rgba(255, 210, 110, 0) 78%
-  );
-  mix-blend-mode: screen;
+  animation: home-screen-current-treasure-glow 0.9s ease-in-out infinite;
+}
+
+.home-screen__treasure-locked {
+  -webkit-backdrop-filter: grayscale(1) brightness(1.15) contrast(0.85);
+  backdrop-filter: grayscale(1) brightness(1.15) contrast(0.85);
+  background: rgba(210, 210, 210, 0.4);
+  border-radius: 50%;
+  height: 76px;
+  pointer-events: none;
+  position: absolute;
+  transform: translate(-50%, -50%);
+  width: 76px;
+  z-index: 1;
 }
 
 .home-screen__treasure-coin {
@@ -128,11 +128,11 @@
   }
 
   .home-screen__header {
-    align-items: flex-start;
+    align-items: center;
     flex-direction: row;
     gap: 12px;
     margin-bottom: 14px;
-    padding: 12px 14px;
+    padding: 10px 14px;
   }
 
   .home-screen__actions {
@@ -142,7 +142,8 @@
     gap: 8px;
   }
 
-  .home-screen__treasure-hotspot {
+  .home-screen__treasure-hotspot,
+  .home-screen__treasure-locked {
     height: 60px;
     width: 60px;
   }
@@ -154,20 +155,20 @@
   }
 
   .home-screen__header {
-    align-items: flex-start;
-    flex-direction: column;
+    align-items: center;
+    flex-direction: row;
     gap: 10px;
     margin-bottom: 12px;
-    padding: 10px 12px;
+    padding: 8px 12px;
   }
 
   .home-screen__actions {
-    align-items: flex-start;
-    flex-direction: row;
+    align-items: center;
     flex-wrap: wrap;
   }
 
-  .home-screen__treasure-hotspot {
+  .home-screen__treasure-hotspot,
+  .home-screen__treasure-locked {
     height: 50px;
     width: 50px;
   }

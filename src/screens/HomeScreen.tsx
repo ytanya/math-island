@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Button, Time, Title, Wallet } from 'animal-island-ui'
+import { Button, Title, Wallet } from 'animal-island-ui'
 import islandMap from '../assets/adventure-island.png'
 import { MusicToggleButton } from '../components/MusicToggleButton'
 import {
@@ -87,7 +87,6 @@ export function HomeScreen({
           <Title size="large" color="app-yellow">
             Math Island
           </Title>
-          <Time className="home-screen__time" />
         </div>
 
         <div className="home-screen__actions">
@@ -115,10 +114,18 @@ export function HomeScreen({
           const isAvailable = unit.id === levelProgress.currentAvailableTreasureId
           const isCompleted = treasure.completed
           const isCurrent = isAvailable && !isCompleted
-          const isPlayable = isAvailable || isCompleted
+          const isLocked = !isAvailable && !isCompleted
 
-          if (!isPlayable) {
-            return null
+          if (isLocked) {
+            return (
+              <div
+                aria-hidden="true"
+                className="home-screen__treasure-locked"
+                data-testid={`locked-${unit.id}`}
+                key={unit.id}
+                style={{ left: unit.mapLeft, top: unit.mapTop }}
+              />
+            )
           }
 
           return (
