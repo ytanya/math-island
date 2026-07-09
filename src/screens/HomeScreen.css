@@ -3,21 +3,22 @@
   color: var(--animal-text-color);
   display: flex;
   flex-direction: column;
-  max-height: 100svh;
+  height: 100svh;
   margin: 0 auto;
   max-width: 1048px;
-  overflow-y: auto;
+  overflow: hidden;
   padding: 28px 24px;
   text-align: left;
   width: 100%;
 }
 
 .home-screen__map {
-  aspect-ratio: 1 / 1;
   border-radius: 22px;
   box-shadow: 0 18px 45px rgba(82, 52, 23, 0.2);
+  flex: 1;
   margin: 0 auto;
   max-width: 960px;
+  min-height: 0;
   overflow: hidden;
   position: relative;
   width: 100%;
@@ -72,100 +73,43 @@
 }
 
 .home-screen__treasure-hotspot {
+  background: transparent;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  height: 76px;
+  padding: 0;
   position: absolute;
   transform: translate(-50%, -50%);
-  transition: transform 180ms ease, filter 180ms ease;
+  transition: transform 180ms ease;
+  width: 76px;
   z-index: 2;
 }
 
 .home-screen__treasure-hotspot:hover,
-.home-screen__treasure-hotspot:focus-within {
-  filter: drop-shadow(0 12px 18px rgba(65, 40, 18, 0.28));
+.home-screen__treasure-hotspot:focus-visible {
   transform: translate(-50%, -50%) scale(1.08);
 }
 
-.home-screen__treasure-marker {
-  align-items: center;
-  background: rgba(255, 247, 218, 0.94);
-  border: 3px solid rgba(120, 76, 31, 0.55);
-  border-radius: 999px;
-  color: var(--animal-text-color);
-  display: inline-flex;
-  flex-direction: column;
-  gap: 3px;
-  min-height: 76px;
-  min-width: 112px;
-  padding: 8px 14px;
-  text-align: center;
-  white-space: nowrap;
-}
-
-@keyframes home-screen-next-up-glow {
+@keyframes home-screen-current-treasure-glow {
   0%,
   100% {
-    box-shadow: 0 0 0 0 rgba(255, 179, 0, 0.6);
+    opacity: 0.7;
   }
   50% {
-    box-shadow: 0 0 0 12px rgba(255, 179, 0, 0);
+    opacity: 1;
   }
 }
 
-@keyframes home-screen-next-up-bounce {
-  0%,
-  100% {
-    transform: translate(-50%, 0);
-  }
-  50% {
-    transform: translate(-50%, -10px);
-  }
-}
-
-.home-screen__treasure-marker--next-up {
-  animation: home-screen-next-up-glow 1.6s ease-in-out infinite;
-  border-color: rgba(255, 153, 0, 0.9);
-}
-
-.home-screen__treasure-pointer {
-  animation: home-screen-next-up-bounce 0.9s ease-in-out infinite;
-  font-size: 30px;
-  left: 50%;
-  line-height: 1;
-  pointer-events: none;
-  position: absolute;
-  top: -44px;
-  z-index: 4;
-}
-
-.home-screen__treasure-marker--locked {
-  align-items: center;
-  background: rgba(90, 90, 90, 0.55);
-  border: 3px solid rgba(60, 60, 60, 0.5);
-  border-radius: 999px;
-  color: rgba(255, 255, 255, 0.8);
-  cursor: default;
-  display: inline-flex;
-  filter: grayscale(1);
-  justify-content: center;
-  min-height: 56px;
-  min-width: 56px;
-  opacity: 0.6;
-  padding: 8px;
-}
-
-.home-screen__treasure-emoji {
-  font-size: 26px;
-  line-height: 1;
-}
-
-.home-screen__treasure-name {
-  color: var(--animal-text-color);
-  font-size: 14px;
-  font-weight: 800;
-  line-height: 1.05;
-}
-
-.home-screen__tag-slot {
-  min-height: 22px;
+.home-screen__treasure-hotspot--current {
+  animation: home-screen-current-treasure-glow 1.4s ease-in-out infinite;
+  background: radial-gradient(
+    circle,
+    rgba(255, 233, 160, 0.95) 0%,
+    rgba(255, 210, 110, 0.6) 55%,
+    rgba(255, 210, 110, 0) 78%
+  );
+  mix-blend-mode: screen;
 }
 
 .home-screen__treasure-coin {
@@ -198,23 +142,9 @@
     gap: 8px;
   }
 
-  .home-screen__treasure-marker {
-    min-height: 72px;
-    min-width: 100px;
-    padding: 7px 11px;
-  }
-
-  .home-screen__treasure-emoji {
-    font-size: 24px;
-  }
-
-  .home-screen__treasure-name {
-    font-size: 13px;
-  }
-
-  .home-screen__treasure-pointer {
-    font-size: 24px;
-    top: -34px;
+  .home-screen__treasure-hotspot {
+    height: 60px;
+    width: 60px;
   }
 }
 
@@ -237,22 +167,8 @@
     flex-wrap: wrap;
   }
 
-  .home-screen__treasure-marker {
-    min-height: 68px;
-    min-width: 88px;
-    padding: 7px 10px;
-  }
-
-  .home-screen__treasure-emoji {
-    font-size: 22px;
-  }
-
-  .home-screen__treasure-name {
-    font-size: 12px;
-  }
-
-  .home-screen__treasure-pointer {
-    font-size: 20px;
-    top: -28px;
+  .home-screen__treasure-hotspot {
+    height: 50px;
+    width: 50px;
   }
 }

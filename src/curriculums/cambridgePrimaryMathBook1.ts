@@ -25,7 +25,7 @@ const unit2: CurriculumUnit = {
   id: 'unit_2',
   name: 'Working with numbers to 10',
   mapLeft: '40%',
-  mapTop: '90%',
+  mapTop: '79%',
   questions: [
     { id: 'u2_q1', prompt: '2 + 3 = ?', choices: [4, 5, 6, 7], answer: 5 },
     { id: 'u2_q2', prompt: '6 - 2 = ?', choices: [2, 3, 4, 5], answer: 4 },
@@ -234,7 +234,7 @@ const unit13: CurriculumUnit = {
   id: 'unit_13',
   name: 'Measures (2)',
   mapLeft: '13%',
-  mapTop: '33%',
+  mapTop: '23%',
   questions: [
     { id: 'u13_q1', prompt: 'Which is heavier: 2 kg or 8 kg? Answer with the number.', choices: [2, 4, 6, 8], answer: 8 },
     { id: 'u13_q2', prompt: 'Which is lighter: 5 kg or 3 kg? Answer with the number.', choices: [2, 3, 4, 5], answer: 3 },
@@ -252,8 +252,8 @@ const unit13: CurriculumUnit = {
 const unit14: CurriculumUnit = {
   id: 'unit_14',
   name: 'Position, direction and patterns',
-  mapLeft: '72%',
-  mapTop: '88%',
+  mapLeft: '90%',
+  mapTop: '32%',
   questions: [
     { id: 'u14_q1', prompt: 'What number comes next: 2, 4, 6, 8, ?', choices: [9, 10, 11, 12], answer: 10 },
     { id: 'u14_q2', prompt: 'What number comes next: 1, 3, 5, 7, ?', choices: [8, 9, 10, 11], answer: 9 },
@@ -272,7 +272,7 @@ const unit15: CurriculumUnit = {
   id: 'unit_15',
   name: 'Time (2)',
   mapLeft: '77%',
-  mapTop: '33%',
+  mapTop: '22%',
   questions: [
     { id: 'u15_q1', prompt: 'How many minutes are in half an hour?', choices: [15, 20, 30, 45], answer: 30 },
     { id: 'u15_q2', prompt: 'How many minutes are in a full hour?', choices: [30, 45, 60, 90], answer: 60 },
@@ -290,8 +290,8 @@ const unit15: CurriculumUnit = {
 const unit16: CurriculumUnit = {
   id: 'unit_16',
   name: 'Statistics (2)',
-  mapLeft: '45%',
-  mapTop: '33%',
+  mapLeft: '50%',
+  mapTop: '21%',
   questions: [
     { id: 'u16_q1', prompt: 'A block graph shows 4 blocks for apples and 6 for bananas. How many more bananas than apples?', choices: [1, 2, 3, 4], answer: 2 },
     { id: 'u16_q2', prompt: 'A tally shows 5 marks for cats and 3 for dogs. How many pets in total?', choices: [6, 7, 8, 9], answer: 8 },

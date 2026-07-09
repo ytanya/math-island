@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Button, Tag, Time, Title, Wallet } from 'animal-island-ui'
+import { Button, Time, Title, Wallet } from 'animal-island-ui'
 import islandMap from '../assets/adventure-island.png'
 import { MusicToggleButton } from '../components/MusicToggleButton'
 import {
@@ -114,62 +114,31 @@ export function HomeScreen({
           const treasure = levelProgress.treasures[unit.id]
           const isAvailable = unit.id === levelProgress.currentAvailableTreasureId
           const isCompleted = treasure.completed
-          const isLocked = !isAvailable && !isCompleted
-          const isNextUp = isAvailable && !isCompleted
+          const isCurrent = isAvailable && !isCompleted
+          const isPlayable = isAvailable || isCompleted
+
+          if (!isPlayable) {
+            return null
+          }
 
           return (
-            <div
-              className="home-screen__treasure-hotspot"
-              data-testid={`treasure-${unit.id}`}
+            <button
+              aria-label={`Play ${unit.name}`}
+              className={[
+                'home-screen__treasure-hotspot',
+                isCurrent ? 'home-screen__treasure-hotspot--current' : '',
+              ]
+                .filter(Boolean)
+                .join(' ')}
+              data-testid={`play-button-${unit.id}`}
               key={unit.id}
+              onClick={() => {
+                playClickSound()
+                onPlayTreasure(unit.id)
+              }}
               style={{ left: unit.mapLeft, top: unit.mapTop }}
-            >
-              {isNextUp ? (
-                <span
-                  aria-hidden="true"
-                  className="home-screen__treasure-pointer"
-                  data-testid={`next-up-pointer-${unit.id}`}
-                >
-                  👉
-                </span>
-              ) : null}
-
-              {isLocked ? (
-                <div aria-hidden="true" className="home-screen__treasure-marker--locked">
-                  <span className="home-screen__treasure-emoji">🔒</span>
-                </div>
-              ) : (
-                <Button
-                  className={[
-                    'home-screen__treasure-marker',
-                    isNextUp ? 'home-screen__treasure-marker--next-up' : '',
-                  ]
-                    .filter(Boolean)
-                    .join(' ')}
-                  data-testid={`play-button-${unit.id}`}
-                  htmlType="button"
-                  onClick={() => {
-                    playClickSound()
-                    onPlayTreasure(unit.id)
-                  }}
-                  type="primary"
-                >
-                  <span className="home-screen__treasure-emoji" aria-hidden="true">
-                    🗝️
-                  </span>
-                  <span className="home-screen__treasure-name">{unit.name}</span>
-                  <div className="home-screen__tag-slot">
-                    {isCompleted ? (
-                      <span data-testid={`treasure-coins-${unit.id}`}>
-                        <Tag color="app-green" size="small">
-                          {`🪙 ${treasure.coinsEarned}`}
-                        </Tag>
-                      </span>
-                    ) : null}
-                  </div>
-                </Button>
-              )}
-            </div>
+              type="button"
+            />
           )
         })}
 

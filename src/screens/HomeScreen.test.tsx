@@ -26,7 +26,7 @@ const buildProfile = (): ChildProfile => ({
 })
 
 describe('HomeScreen', () => {
-  it('renders completed, available, and locked treasures with correct interactivity', () => {
+  it('renders completed and available treasures as clickable, locked treasures as not rendered', () => {
     const onPlayTreasure = vi.fn()
 
     render(
@@ -38,12 +38,8 @@ describe('HomeScreen', () => {
       />,
     )
 
-    expect(screen.getByTestId('treasure-coins-unit_1').textContent).toContain('8')
     expect(screen.getByTestId('play-button-unit_1')).not.toBeNull()
-
     expect(screen.getByTestId('play-button-unit_2')).not.toBeNull()
-    expect(screen.queryByTestId('treasure-coins-unit_2')).toBeNull()
-
     expect(screen.queryByTestId('play-button-unit_3')).toBeNull()
 
     fireEvent.click(screen.getByTestId('play-button-unit_2'))
@@ -52,7 +48,7 @@ describe('HomeScreen', () => {
     expect(onPlayTreasure).toHaveBeenCalledTimes(1)
   })
 
-  it('marks only the next-to-play treasure with a non-text pointer indicator', () => {
+  it('has no visible text labels on treasure hotspots', () => {
     render(
       <HomeScreen
         onCoinAnimationComplete={vi.fn()}
@@ -62,17 +58,26 @@ describe('HomeScreen', () => {
       />,
     )
 
-    expect(screen.getByTestId('next-up-pointer-unit_2')).not.toBeNull()
+    expect(screen.getByTestId('play-button-unit_1').textContent).toBe('')
+    expect(screen.getByTestId('play-button-unit_2').textContent).toBe('')
+  })
+
+  it('highlights only the next-to-play treasure, not a completed one', () => {
+    render(
+      <HomeScreen
+        onCoinAnimationComplete={vi.fn()}
+        onPlayTreasure={vi.fn()}
+        pendingCoinAnimation={null}
+        profile={buildProfile()}
+      />,
+    )
+
     expect(screen.getByTestId('play-button-unit_2').className).toContain(
-      'home-screen__treasure-marker--next-up',
+      'home-screen__treasure-hotspot--current',
     )
-
-    expect(screen.queryByTestId('next-up-pointer-unit_1')).toBeNull()
     expect(screen.getByTestId('play-button-unit_1').className).not.toContain(
-      'home-screen__treasure-marker--next-up',
+      'home-screen__treasure-hotspot--current',
     )
-
-    expect(screen.queryByTestId('next-up-pointer-unit_3')).toBeNull()
   })
 
   it('flies a coin from the completed treasure to the header and calls onCoinAnimationComplete', () => {
