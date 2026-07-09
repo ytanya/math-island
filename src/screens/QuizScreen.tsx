@@ -10,8 +10,6 @@ import {
 } from '../utils/sound'
 import './QuizScreen.css'
 
-const TOTAL_QUESTIONS = 10
-
 interface QuizScreenProps {
   unitId: string
   onComplete: (unitId: string, coinsEarned: number) => void
@@ -24,6 +22,8 @@ export function QuizScreen({ unitId, onComplete, onExit }: QuizScreenProps) {
   if (!unit) {
     throw new Error(`Unknown unit id: ${unitId}`)
   }
+
+  const totalQuestions = unit.questions.length
 
   const [questionIndex, setQuestionIndex] = useState(1)
   const [correctCount, setCorrectCount] = useState(0)
@@ -50,7 +50,7 @@ export function QuizScreen({ unitId, onComplete, onExit }: QuizScreenProps) {
   }
 
   const handleNextClick = () => {
-    if (questionIndex >= TOTAL_QUESTIONS) {
+    if (questionIndex >= totalQuestions) {
       playCelebrationSound()
       setShowSummary(true)
       return
@@ -81,7 +81,7 @@ export function QuizScreen({ unitId, onComplete, onExit }: QuizScreenProps) {
             <p className="quiz-screen__eyebrow">Quiz complete</p>
             <h1>Score</h1>
             <p className="quiz-screen__score" data-testid="summary-score">
-              {correctCount} / {TOTAL_QUESTIONS}
+              {correctCount} / {totalQuestions}
             </p>
             <Button
               data-testid="back-to-island-button"
@@ -106,13 +106,13 @@ export function QuizScreen({ unitId, onComplete, onExit }: QuizScreenProps) {
         <MusicToggleButton />
         <div className="quiz-screen__progress">
           <span>
-            Question {questionIndex} / {TOTAL_QUESTIONS}
+            Question {questionIndex} / {totalQuestions}
           </span>
           <Progress
             duration={0}
-            infoFormat={() => `${questionIndex} / ${TOTAL_QUESTIONS}`}
+            infoFormat={() => `${questionIndex} / ${totalQuestions}`}
             infoPosition="right"
-            percent={(questionIndex / TOTAL_QUESTIONS) * 100}
+            percent={(questionIndex / totalQuestions) * 100}
             showInfo
             size="middle"
           />
@@ -183,7 +183,7 @@ export function QuizScreen({ unitId, onComplete, onExit }: QuizScreenProps) {
             onClick={handleNextClick}
             type="primary"
           >
-            {questionIndex === TOTAL_QUESTIONS ? 'See Score' : 'Next'}
+            {questionIndex === totalQuestions ? 'See Score' : 'Next'}
           </Button>
         </div>
       </Card>

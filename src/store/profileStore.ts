@@ -24,7 +24,7 @@ const createDefaultProfile = (): ChildProfile => ({
   },
 })
 
-const isValidTreasureProgress = (value: unknown): value is TreasureProgress => {
+const isValidTreasureProgress = (value: unknown, maxCoins: number): value is TreasureProgress => {
   if (typeof value !== 'object' || value === null) {
     return false
   }
@@ -36,7 +36,7 @@ const isValidTreasureProgress = (value: unknown): value is TreasureProgress => {
     typeof progress.coinsEarned === 'number' &&
     Number.isInteger(progress.coinsEarned) &&
     progress.coinsEarned >= 0 &&
-    progress.coinsEarned <= 10
+    progress.coinsEarned <= maxCoins
   )
 }
 
@@ -56,7 +56,7 @@ const isValidLevelProgress = (value: unknown): value is LevelProgress => {
   }
 
   return CAMBRIDGE_PRIMARY_MATH_BOOK1.units.every((unit) =>
-    isValidTreasureProgress(levelProgress.treasures?.[unit.id]),
+    isValidTreasureProgress(levelProgress.treasures?.[unit.id], unit.questions.length),
   )
 }
 
