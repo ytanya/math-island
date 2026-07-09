@@ -5,8 +5,8 @@ export const CAMBRIDGE_PRIMARY_MATH_BOOK1_ID = 'cambridge-primary-math-book1'
 const unit1: CurriculumUnit = {
   id: 'unit_1',
   name: 'Numbers to 10',
-  mapLeft: '23%',
-  mapTop: '78%',
+  mapLeft: '20.6%',
+  mapTop: '82.3%',
   questions: [
     { id: 'u1_q1', prompt: 'How many apples are there?', choices: [1, 2, 3, 4], answer: 2, visualCount: 2 },
     { id: 'u1_q2', prompt: 'How many apples are there?', choices: [3, 4, 5, 6], answer: 5, visualCount: 5 },
@@ -24,8 +24,8 @@ const unit1: CurriculumUnit = {
 const unit2: CurriculumUnit = {
   id: 'unit_2',
   name: 'Working with numbers to 10',
-  mapLeft: '40%',
-  mapTop: '79%',
+  mapLeft: '39%',
+  mapTop: '90.6%',
   questions: [
     { id: 'u2_q1', prompt: '2 + 3 = ?', choices: [4, 5, 6, 7], answer: 5 },
     { id: 'u2_q2', prompt: '6 - 2 = ?', choices: [2, 3, 4, 5], answer: 4 },
@@ -43,8 +43,8 @@ const unit2: CurriculumUnit = {
 const unit3: CurriculumUnit = {
   id: 'unit_3',
   name: 'Geometry',
-  mapLeft: '10%',
-  mapTop: '88%',
+  mapLeft: '4.7%',
+  mapTop: '89.1%',
   questions: [
     { id: 'u3_q1', prompt: 'How many sides does a triangle have?', choices: [2, 3, 4, 5], answer: 3 },
     { id: 'u3_q2', prompt: 'How many sides does a square have?', choices: [3, 4, 5, 6], answer: 4 },
@@ -62,8 +62,8 @@ const unit3: CurriculumUnit = {
 const unit4: CurriculumUnit = {
   id: 'unit_4',
   name: 'Fractions',
-  mapLeft: '10%',
-  mapTop: '63%',
+  mapLeft: '7.3%',
+  mapTop: '57.8%',
   questions: [
     { id: 'u4_q1', prompt: 'What is half of 2?', choices: [1, 2, 3, 4], answer: 1 },
     { id: 'u4_q2', prompt: 'What is half of 4?', choices: [1, 2, 3, 4], answer: 2 },
@@ -81,8 +81,8 @@ const unit4: CurriculumUnit = {
 const unit5: CurriculumUnit = {
   id: 'unit_5',
   name: 'Measures',
-  mapLeft: '24%',
-  mapTop: '65%',
+  mapLeft: '20.3%',
+  mapTop: '60.9%',
   questions: [
     { id: 'u5_q1', prompt: 'Which is longer: 3 cm or 7 cm? Answer with the number.', choices: [3, 5, 7, 9], answer: 7 },
     { id: 'u5_q2', prompt: 'Which is shorter: 8 cm or 2 cm? Answer with the number.', choices: [2, 4, 6, 8], answer: 2 },
@@ -100,8 +100,8 @@ const unit5: CurriculumUnit = {
 const unit6: CurriculumUnit = {
   id: 'unit_6',
   name: 'Position',
-  mapLeft: '64%',
-  mapTop: '68%',
+  mapLeft: '64.1%',
+  mapTop: '73.4%',
   questions: [
     { id: 'u6_q1', prompt: "What number position is 'first'?", choices: [1, 2, 3, 4], answer: 1 },
     { id: 'u6_q2', prompt: "What number position is 'third'?", choices: [2, 3, 4, 5], answer: 3 },
@@ -119,8 +119,8 @@ const unit6: CurriculumUnit = {
 const unit7: CurriculumUnit = {
   id: 'unit_7',
   name: 'Time',
-  mapLeft: '7%',
-  mapTop: '42%',
+  mapLeft: '4.4%',
+  mapTop: '40.1%',
   questions: [
     { id: 'u7_q1', prompt: "The clock shows 3 o'clock. What is the hour?", choices: [2, 3, 4, 5], answer: 3 },
     { id: 'u7_q2', prompt: "The clock shows 7 o'clock. What is the hour?", choices: [6, 7, 8, 9], answer: 7 },
@@ -138,8 +138,8 @@ const unit7: CurriculumUnit = {
 const unit8: CurriculumUnit = {
   id: 'unit_8',
   name: 'Statistics',
-  mapLeft: '30%',
-  mapTop: '52%',
+  mapLeft: '26%',
+  mapTop: '48.4%',
   questions: [
     { id: 'u8_q1', prompt: 'Circle A has 3 items and circle B has 2 items with no overlap. How many items in total?', choices: [3, 4, 5, 6], answer: 5 },
     { id: 'u8_q2', prompt: 'A set has 4 red apples and 3 green apples. How many apples in total?', choices: [5, 6, 7, 8], answer: 7 },
@@ -157,8 +157,8 @@ const unit8: CurriculumUnit = {
 const unit9: CurriculumUnit = {
   id: 'unit_9',
   name: 'Numbers to 20',
-  mapLeft: '55%',
-  mapTop: '52%',
+  mapLeft: '52.6%',
+  mapTop: '56.8%',
   questions: [
     { id: 'u9_q1', prompt: 'How many apples are there?', choices: [10, 11, 12, 13], answer: 12, visualCount: 12 },
     { id: 'u9_q2', prompt: 'How many apples are there?', choices: [13, 14, 15, 16], answer: 15, visualCount: 15 },
@@ -176,8 +176,8 @@ const unit9: CurriculumUnit = {
 const unit10: CurriculumUnit = {
   id: 'unit_10',
   name: 'Working with numbers to 20',
-  mapLeft: '40%',
-  mapTop: '43%',
+  mapLeft: '36.5%',
+  mapTop: '42.2%',
   questions: [
     { id: 'u10_q1', prompt: '12 + 3 = ?', choices: [13, 14, 15, 16], answer: 15 },
     { id: 'u10_q2', prompt: '18 - 5 = ?', choices: [11, 12, 13, 14], answer: 13 },
@@ -195,8 +195,8 @@ const unit10: CurriculumUnit = {
 const unit11: CurriculumUnit = {
   id: 'unit_11',
   name: 'Geometry (2)',
-  mapLeft: '62%',
-  mapTop: '40%',
+  mapLeft: '61.5%',
+  mapTop: '41.7%',
   questions: [
     { id: 'u11_q1', prompt: 'How many faces does a rectangular box (cuboid) have?', choices: [4, 5, 6, 7], answer: 6 },
     { id: 'u11_q2', prompt: 'How many edges does a cube have?', choices: [10, 11, 12, 13], answer: 12 },
@@ -214,8 +214,8 @@ const unit11: CurriculumUnit = {
 const unit12: CurriculumUnit = {
   id: 'unit_12',
   name: 'Fractions (2)',
-  mapLeft: '90%',
-  mapTop: '55%',
+  mapLeft: '92.7%',
+  mapTop: '57.3%',
   questions: [
     { id: 'u12_q1', prompt: 'What is half of 22?', choices: [10, 11, 12, 13], answer: 11 },
     { id: 'u12_q2', prompt: 'What is half of 24?', choices: [11, 12, 13, 14], answer: 12 },
@@ -233,8 +233,8 @@ const unit12: CurriculumUnit = {
 const unit13: CurriculumUnit = {
   id: 'unit_13',
   name: 'Measures (2)',
-  mapLeft: '13%',
-  mapTop: '23%',
+  mapLeft: '10.4%',
+  mapTop: '23.4%',
   questions: [
     { id: 'u13_q1', prompt: 'Which is heavier: 2 kg or 8 kg? Answer with the number.', choices: [2, 4, 6, 8], answer: 8 },
     { id: 'u13_q2', prompt: 'Which is lighter: 5 kg or 3 kg? Answer with the number.', choices: [2, 3, 4, 5], answer: 3 },
@@ -252,8 +252,8 @@ const unit13: CurriculumUnit = {
 const unit14: CurriculumUnit = {
   id: 'unit_14',
   name: 'Position, direction and patterns',
-  mapLeft: '90%',
-  mapTop: '32%',
+  mapLeft: '93.2%',
+  mapTop: '33.3%',
   questions: [
     { id: 'u14_q1', prompt: 'What number comes next: 2, 4, 6, 8, ?', choices: [9, 10, 11, 12], answer: 10 },
     { id: 'u14_q2', prompt: 'What number comes next: 1, 3, 5, 7, ?', choices: [8, 9, 10, 11], answer: 9 },
@@ -271,8 +271,8 @@ const unit14: CurriculumUnit = {
 const unit15: CurriculumUnit = {
   id: 'unit_15',
   name: 'Time (2)',
-  mapLeft: '77%',
-  mapTop: '22%',
+  mapLeft: '76.6%',
+  mapTop: '23.4%',
   questions: [
     { id: 'u15_q1', prompt: 'How many minutes are in half an hour?', choices: [15, 20, 30, 45], answer: 30 },
     { id: 'u15_q2', prompt: 'How many minutes are in a full hour?', choices: [30, 45, 60, 90], answer: 60 },
@@ -290,8 +290,8 @@ const unit15: CurriculumUnit = {
 const unit16: CurriculumUnit = {
   id: 'unit_16',
   name: 'Statistics (2)',
-  mapLeft: '50%',
-  mapTop: '21%',
+  mapLeft: '46.4%',
+  mapTop: '24%',
   questions: [
     { id: 'u16_q1', prompt: 'A block graph shows 4 blocks for apples and 6 for bananas. How many more bananas than apples?', choices: [1, 2, 3, 4], answer: 2 },
     { id: 'u16_q2', prompt: 'A tally shows 5 marks for cats and 3 for dogs. How many pets in total?', choices: [6, 7, 8, 9], answer: 8 },
