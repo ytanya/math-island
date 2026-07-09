@@ -82,33 +82,33 @@ export function HomeScreen({
 
   return (
     <main className="home-screen" data-testid="home-screen">
+      <header className="home-screen__header">
+        <div className="home-screen__title">
+          <Title size="large" color="app-yellow">
+            Math Island
+          </Title>
+          <Time className="home-screen__time" />
+        </div>
+
+        <div className="home-screen__actions">
+          <Wallet value={profile.bells} size="medium" />
+          <div className="home-screen__action-buttons">
+            <MusicToggleButton />
+            {onOpenParents ? (
+              <Button size="small" type="text" onClick={onOpenParents}>
+                Parents
+              </Button>
+            ) : null}
+          </div>
+        </div>
+      </header>
+
       <section className="home-screen__map" aria-label="Math Island map">
         <img
           alt="Illustrated treasure island map"
           className="home-screen__map-image"
           src={islandMap}
         />
-
-        <header className="home-screen__header">
-          <div className="home-screen__title">
-            <Title size="large" color="app-yellow">
-              Math Island
-            </Title>
-            <Time className="home-screen__time" />
-          </div>
-
-          <div className="home-screen__actions">
-            <Wallet value={profile.bells} size="medium" />
-            <div className="home-screen__action-buttons">
-              <MusicToggleButton />
-              {onOpenParents ? (
-                <Button size="small" type="text" onClick={onOpenParents}>
-                  Parents
-                </Button>
-              ) : null}
-            </div>
-          </div>
-        </header>
 
         {CAMBRIDGE_PRIMARY_MATH_BOOK1.units.map((unit) => {
           const treasure = levelProgress.treasures[unit.id]
