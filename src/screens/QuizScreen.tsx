@@ -1,11 +1,8 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Button, Card, Progress, Typewriter } from 'animal-island-ui'
+import { CAMBRIDGE_PRIMARY_MATH_BOOK1, getUnitById } from '../curriculums/cambridgePrimaryMathBook1'
 import { MusicToggleButton } from '../components/MusicToggleButton'
-import { generateQuestion } from '../data/questionBank'
-import { recordAnswer, saveProfile } from '../store/profileStore'
-import type { ChildProfile, Question, SkillId } from '../types'
 import {
-  playAchievementSound,
   playCelebrationSound,
   playClickSound,
   playCorrectSound,
@@ -16,22 +13,18 @@ import './QuizScreen.css'
 const TOTAL_QUESTIONS = 10
 
 interface QuizScreenProps {
-  skillId: SkillId
-  profile: ChildProfile
-  onProfileChange: (profile: ChildProfile) => void
+  unitId: string
+  onComplete: (unitId: string, coinsEarned: number) => void
   onExit: () => void
 }
 
-export function QuizScreen({
-  skillId,
-  profile,
-  onProfileChange,
-  onExit,
-}: QuizScreenProps) {
-  const [currentQuestion, setCurrentQuestion] = useState<Question>(() =>
-    generateQuestion(skillId),
-  )
-  const [activeProfile, setActiveProfile] = useState(profile)
+export function QuizScreen({ unitId, onComplete, onExit }: QuizScreenProps) {
+  const unit = getUnitById(CAMBRIDGE_PRIMARY_MATH_BOOK1, unitId)
+
+  if (!unit) {
+    throw new Error(`Unknown unit id: ${unitId}`)
+  }
+
   const [questionIndex, setQuestionIndex] = useState(1)
   const [correctCount, setCorrectCount] = useState(0)
   const [selectedChoice, setSelectedChoice] = useState<number | null>(null)
@@ -39,31 +32,17 @@ export function QuizScreen({
   const [feedbackMessage, setFeedbackMessage] = useState<string | null>(null)
   const [showSummary, setShowSummary] = useState(false)
 
-  useEffect(() => {
-    setActiveProfile(profile)
-  }, [profile])
+  const currentQuestion = unit.questions[questionIndex - 1]
 
   const handleChoiceClick = (choice: number) => {
     const isCorrect = choice === currentQuestion.answer
-    const wasMastered = activeProfile.progress[skillId].mastered
-    const updatedProfile = recordAnswer(activeProfile, skillId, isCorrect)
-    const justMastered = !wasMastered && updatedProfile.progress[skillId].mastered
-    const message = isCorrect ? 'Great job! 🎉' : 'Try again!'
 
     setSelectedChoice(choice)
-    setFeedbackMessage(justMastered ? 'Skill mastered! 🌟' : message)
-    setActiveProfile(updatedProfile)
-    setCorrectCount((count) => count + (isCorrect ? 1 : 0))
-    onProfileChange(updatedProfile)
-    saveProfile(updatedProfile)
+    setFeedbackMessage(isCorrect ? 'Great job! 🎉' : 'Try again!')
 
     if (isCorrect) {
       setAnswered(true)
-    }
-
-    if (justMastered) {
-      playAchievementSound()
-    } else if (isCorrect) {
+      setCorrectCount((count) => count + 1)
       playCorrectSound()
     } else {
       playWrongSound()
@@ -78,7 +57,6 @@ export function QuizScreen({
     }
 
     playClickSound()
-    setCurrentQuestion(generateQuestion(skillId))
     setQuestionIndex((index) => index + 1)
     setSelectedChoice(null)
     setAnswered(false)
@@ -88,6 +66,11 @@ export function QuizScreen({
   const handleExitClick = () => {
     playClickSound()
     onExit()
+  }
+
+  const handleBackToIslandClick = () => {
+    playClickSound()
+    onComplete(unitId, correctCount)
   }
 
   if (showSummary) {
@@ -103,7 +86,7 @@ export function QuizScreen({
             <Button
               data-testid="back-to-island-button"
               htmlType="button"
-              onClick={handleExitClick}
+              onClick={handleBackToIslandClick}
               type="primary"
             >
               Back to Island
@@ -194,16 +177,14 @@ export function QuizScreen({
           >
             {feedbackMessage}
           </p>
-          {answered ? (
-            <Button
-              data-testid="next-button"
-              htmlType="button"
-              onClick={handleNextClick}
-              type="primary"
-            >
-              {questionIndex === TOTAL_QUESTIONS ? 'See Score' : 'Next'}
-            </Button>
-          ) : null}
+          <Button
+            data-testid="next-button"
+            htmlType="button"
+            onClick={handleNextClick}
+            type="primary"
+          >
+            {questionIndex === TOTAL_QUESTIONS ? 'See Score' : 'Next'}
+          </Button>
         </div>
       </Card>
     </main>
