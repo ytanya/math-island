@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Button, Card, Progress, Typewriter } from 'animal-island-ui'
 import { CAMBRIDGE_PRIMARY_MATH_BOOK1, getUnitById } from '../curriculums/cambridgePrimaryMathBook1'
 import { MusicToggleButton } from '../components/MusicToggleButton'
@@ -8,6 +8,7 @@ import {
   playCorrectSound,
   playWrongSound,
 } from '../utils/sound'
+import { speakText } from '../utils/speech'
 import './QuizScreen.css'
 
 interface QuizScreenProps {
@@ -33,6 +34,15 @@ export function QuizScreen({ unitId, onComplete, onExit }: QuizScreenProps) {
   const [showSummary, setShowSummary] = useState(false)
 
   const currentQuestion = unit.questions[questionIndex - 1]
+
+  useEffect(() => {
+    if (showSummary) return
+    speakText(currentQuestion.prompt)
+  }, [currentQuestion.id, showSummary])
+
+  const handleReadAloudClick = () => {
+    speakText(currentQuestion.prompt)
+  }
 
   const handleChoiceClick = (choice: number) => {
     const isCorrect = choice === currentQuestion.answer
@@ -121,11 +131,24 @@ export function QuizScreen({ unitId, onComplete, onExit }: QuizScreenProps) {
 
       <Card className="quiz-screen__question-card" color="app-yellow">
         <p className="quiz-screen__eyebrow">Choose the answer</p>
-        <h1 className="quiz-screen__prompt" data-testid="question-prompt">
-          <Typewriter autoPlay={false} trigger={currentQuestion.id}>
-            {currentQuestion.prompt}
-          </Typewriter>
-        </h1>
+        <div className="quiz-screen__prompt-row">
+          <h1 className="quiz-screen__prompt" data-testid="question-prompt">
+            <Typewriter autoPlay={false} trigger={currentQuestion.id}>
+              {currentQuestion.prompt}
+            </Typewriter>
+          </h1>
+          <Button
+            aria-label="Read question aloud"
+            className="quiz-screen__read-aloud-button"
+            data-testid="read-aloud-button"
+            htmlType="button"
+            onClick={handleReadAloudClick}
+            size="small"
+            type="text"
+          >
+            🔊
+          </Button>
+        </div>
 
         {currentQuestion.visualCount !== undefined ? (
           <div

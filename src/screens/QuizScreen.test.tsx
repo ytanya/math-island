@@ -1,6 +1,9 @@
 import { fireEvent, render, screen } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 import { QuizScreen } from './QuizScreen'
+import { speakText } from '../utils/speech'
+
+vi.mock('../utils/speech', () => ({ speakText: vi.fn() }))
 
 const answerAllTenQuestions = () => {
   for (let index = 0; index < 10; index += 1) {
@@ -63,5 +66,28 @@ describe('QuizScreen', () => {
     fireEvent.click(screen.getByTestId('back-to-island-button'))
 
     expect(onComplete).toHaveBeenCalledWith('unit_1', 9)
+  })
+
+  it('reads the question aloud automatically and again when the speaker button is clicked', () => {
+    vi.mocked(speakText).mockClear()
+
+    render(<QuizScreen onComplete={vi.fn()} onExit={vi.fn()} unitId="unit_1" />)
+
+    expect(speakText).toHaveBeenCalledWith('How many apples are there?')
+    expect(speakText).toHaveBeenCalledTimes(1)
+
+    fireEvent.click(screen.getByTestId('read-aloud-button'))
+
+    expect(speakText).toHaveBeenCalledTimes(2)
+  })
+
+  it('reads the next question aloud when moving to it', () => {
+    vi.mocked(speakText).mockClear()
+
+    render(<QuizScreen onComplete={vi.fn()} onExit={vi.fn()} unitId="unit_1" />)
+
+    fireEvent.click(screen.getByTestId('next-button'))
+
+    expect(speakText).toHaveBeenCalledTimes(2)
   })
 })

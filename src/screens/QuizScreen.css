@@ -52,12 +52,24 @@
   width: 100%;
 }
 
+.quiz-screen__prompt-row {
+  align-items: flex-start;
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+}
+
 .quiz-screen__prompt {
   color: var(--animal-text-color);
   font-size: 36px;
   font-weight: 900;
   line-height: 1.12;
   margin: 0;
+}
+
+.quiz-screen__read-aloud-button {
+  flex-shrink: 0;
+  font-size: 28px;
 }
 
 .quiz-screen__visual-objects {
