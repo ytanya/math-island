@@ -50,7 +50,7 @@ describe('HomeScreen', () => {
     expect(onPlayTreasure).toHaveBeenCalledTimes(1)
   })
 
-  it('has no visible text labels on treasure hotspots', () => {
+  it('shows only a step number on treasure hotspots, never the unit name', () => {
     render(
       <HomeScreen
         onCoinAnimationComplete={vi.fn()}
@@ -60,8 +60,26 @@ describe('HomeScreen', () => {
       />,
     )
 
-    expect(screen.getByTestId('play-button-unit_1').textContent).toBe('')
-    expect(screen.getByTestId('play-button-unit_2').textContent).toBe('')
+    expect(screen.getByTestId('play-button-unit_1').textContent).toBe('1')
+    expect(screen.getByTestId('play-button-unit_2').textContent).toBe('2')
+    expect(screen.queryByText('Numbers to 10')).toBeNull()
+  })
+
+  it('draws a connecting path segment between every pair of treasures, highlighting traveled ones', () => {
+    render(
+      <HomeScreen
+        onCoinAnimationComplete={vi.fn()}
+        onPlayTreasure={vi.fn()}
+        pendingCoinAnimation={null}
+        profile={buildProfile()}
+      />,
+    )
+
+    const path = screen.getByTestId('treasure-path')
+    const segments = path.querySelectorAll('.home-screen__path-segment')
+    expect(segments.length).toBe(CAMBRIDGE_PRIMARY_MATH_BOOK1.units.length - 1)
+    expect(segments[0].getAttribute('class')).toContain('home-screen__path-segment--traveled')
+    expect(segments[1].getAttribute('class')).not.toContain('home-screen__path-segment--traveled')
   })
 
   it('highlights only the next-to-play treasure, not a completed one', () => {

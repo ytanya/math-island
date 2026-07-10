@@ -103,68 +103,107 @@ export function HomeScreen({
         </div>
       </header>
 
-      <section className="home-screen__map" aria-label="Math Island map">
-        <img
-          alt="Illustrated treasure island map"
-          className="home-screen__map-image"
-          src={islandMap}
-        />
+      <div className="home-screen__map-wrapper">
+        <section className="home-screen__map" aria-label="Math Island map">
+          <img
+            alt="Illustrated treasure island map"
+            className="home-screen__map-image"
+            src={islandMap}
+          />
 
-        {CAMBRIDGE_PRIMARY_MATH_BOOK1.units.map((unit) => {
-          const treasure = levelProgress.treasures[unit.id]
-          const isAvailable = unit.id === levelProgress.currentAvailableTreasureId
-          const isCompleted = treasure.completed
-          const isCurrent = isAvailable && !isCompleted
-          const isLocked = !isAvailable && !isCompleted
+          <svg
+            aria-hidden="true"
+            className="home-screen__path"
+            data-testid="treasure-path"
+            preserveAspectRatio="none"
+            viewBox="0 0 100 100"
+          >
+            {CAMBRIDGE_PRIMARY_MATH_BOOK1.units.slice(0, -1).map((unit, index) => {
+              const nextUnit = CAMBRIDGE_PRIMARY_MATH_BOOK1.units[index + 1]
+              const isTraveled = levelProgress.treasures[unit.id].completed
 
-          if (isLocked) {
+              return (
+                <line
+                  className={[
+                    'home-screen__path-segment',
+                    isTraveled ? 'home-screen__path-segment--traveled' : '',
+                  ]
+                    .filter(Boolean)
+                    .join(' ')}
+                  key={unit.id}
+                  vectorEffect="non-scaling-stroke"
+                  x1={parseFloat(unit.mapLeft)}
+                  x2={parseFloat(nextUnit.mapLeft)}
+                  y1={parseFloat(unit.mapTop)}
+                  y2={parseFloat(nextUnit.mapTop)}
+                />
+              )
+            })}
+          </svg>
+
+          {CAMBRIDGE_PRIMARY_MATH_BOOK1.units.map((unit, index) => {
+            const treasure = levelProgress.treasures[unit.id]
+            const isAvailable = unit.id === levelProgress.currentAvailableTreasureId
+            const isCompleted = treasure.completed
+            const isCurrent = isAvailable && !isCompleted
+            const isLocked = !isAvailable && !isCompleted
+            const stepNumber = index + 1
+
+            if (isLocked) {
+              return (
+                <div
+                  aria-hidden="true"
+                  className="home-screen__treasure-hotspot home-screen__treasure-hotspot--locked"
+                  data-testid={`locked-${unit.id}`}
+                  key={unit.id}
+                  style={{ left: unit.mapLeft, top: unit.mapTop }}
+                >
+                  <img alt="" className="home-screen__treasure-icon" src={treasureChestIcon} />
+                  <span className="home-screen__treasure-step" data-testid={`step-${unit.id}`}>
+                    {stepNumber}
+                  </span>
+                </div>
+              )
+            }
+
             return (
-              <div
-                aria-hidden="true"
-                className="home-screen__treasure-hotspot home-screen__treasure-hotspot--locked"
-                data-testid={`locked-${unit.id}`}
+              <button
+                aria-label={`Play ${unit.name}`}
+                className={[
+                  'home-screen__treasure-hotspot',
+                  isCurrent ? 'home-screen__treasure-hotspot--current' : '',
+                ]
+                  .filter(Boolean)
+                  .join(' ')}
+                data-testid={`play-button-${unit.id}`}
                 key={unit.id}
+                onClick={() => {
+                  playClickSound()
+                  onPlayTreasure(unit.id)
+                }}
                 style={{ left: unit.mapLeft, top: unit.mapTop }}
+                type="button"
               >
                 <img alt="" className="home-screen__treasure-icon" src={treasureChestIcon} />
-              </div>
+                <span className="home-screen__treasure-step" data-testid={`step-${unit.id}`}>
+                  {stepNumber}
+                </span>
+              </button>
             )
-          }
+          })}
 
-          return (
-            <button
-              aria-label={`Play ${unit.name}`}
-              className={[
-                'home-screen__treasure-hotspot',
-                isCurrent ? 'home-screen__treasure-hotspot--current' : '',
-              ]
-                .filter(Boolean)
-                .join(' ')}
-              data-testid={`play-button-${unit.id}`}
-              key={unit.id}
-              onClick={() => {
-                playClickSound()
-                onPlayTreasure(unit.id)
-              }}
-              style={{ left: unit.mapLeft, top: unit.mapTop }}
-              type="button"
+          {coinFlight ? (
+            <span
+              aria-hidden="true"
+              className="home-screen__treasure-coin"
+              data-testid="treasure-coin-flight"
+              style={{ left: coinFlight.left, top: coinFlight.top }}
             >
-              <img alt="" className="home-screen__treasure-icon" src={treasureChestIcon} />
-            </button>
-          )
-        })}
-
-        {coinFlight ? (
-          <span
-            aria-hidden="true"
-            className="home-screen__treasure-coin"
-            data-testid="treasure-coin-flight"
-            style={{ left: coinFlight.left, top: coinFlight.top }}
-          >
-            🪙
-          </span>
-        ) : null}
-      </section>
+              🪙
+            </span>
+          ) : null}
+        </section>
+      </div>
     </main>
   )
 }
