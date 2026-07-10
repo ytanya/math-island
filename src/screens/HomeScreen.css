@@ -65,11 +65,13 @@
 }
 
 .home-screen__treasure-hotspot {
+  align-items: center;
   background: transparent;
   border: none;
-  border-radius: 50%;
   cursor: pointer;
+  display: flex;
   height: 76px;
+  justify-content: center;
   padding: 0;
   position: absolute;
   transform: translate(-50%, -50%);
@@ -83,33 +85,37 @@
   transform: translate(-50%, -50%) scale(1.08);
 }
 
+.home-screen__treasure-icon {
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+  width: 100%;
+}
+
+.home-screen__treasure-hotspot--locked {
+  cursor: default;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.home-screen__treasure-hotspot--locked .home-screen__treasure-icon {
+  filter: grayscale(1) brightness(0.65);
+}
+
 @keyframes home-screen-current-treasure-glow {
   0%,
   100% {
-    box-shadow: 0 0 0 0 rgba(255, 153, 0, 0.65), 0 0 16px 6px rgba(255, 187, 0, 0.85);
+    filter: drop-shadow(0 0 6px rgba(255, 187, 0, 0.85)) drop-shadow(0 0 12px rgba(255, 153, 0, 0.6));
     transform: translate(-50%, -50%) translateY(0);
   }
   50% {
-    box-shadow: 0 0 0 12px rgba(255, 153, 0, 0), 0 0 26px 12px rgba(255, 187, 0, 1);
+    filter: drop-shadow(0 0 12px rgba(255, 187, 0, 1)) drop-shadow(0 0 22px rgba(255, 153, 0, 0.85));
     transform: translate(-50%, -50%) translateY(-10px);
   }
 }
 
 .home-screen__treasure-hotspot--current {
   animation: home-screen-current-treasure-glow 0.9s ease-in-out infinite;
-}
-
-.home-screen__treasure-locked {
-  -webkit-backdrop-filter: grayscale(1) brightness(1.15) contrast(0.85);
-  backdrop-filter: grayscale(1) brightness(1.15) contrast(0.85);
-  background: rgba(210, 210, 210, 0.4);
-  border-radius: 50%;
-  height: 76px;
-  pointer-events: none;
-  position: absolute;
-  transform: translate(-50%, -50%);
-  width: 76px;
-  z-index: 1;
 }
 
 .home-screen__treasure-coin {
@@ -142,8 +148,7 @@
     gap: 8px;
   }
 
-  .home-screen__treasure-hotspot,
-  .home-screen__treasure-locked {
+  .home-screen__treasure-hotspot {
     height: 60px;
     width: 60px;
   }
@@ -167,8 +172,7 @@
     flex-wrap: wrap;
   }
 
-  .home-screen__treasure-hotspot,
-  .home-screen__treasure-locked {
+  .home-screen__treasure-hotspot {
     height: 50px;
     width: 50px;
   }

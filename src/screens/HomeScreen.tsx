@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Button, Title, Wallet } from 'animal-island-ui'
-import islandMap from '../assets/adventure-island.png'
+import islandMap from '../assets/math-island.png'
+import treasureChestIcon from '../assets/treasure-chest.png'
 import { MusicToggleButton } from '../components/MusicToggleButton'
 import {
   CAMBRIDGE_PRIMARY_MATH_BOOK1,
@@ -120,11 +121,13 @@ export function HomeScreen({
             return (
               <div
                 aria-hidden="true"
-                className="home-screen__treasure-locked"
+                className="home-screen__treasure-hotspot home-screen__treasure-hotspot--locked"
                 data-testid={`locked-${unit.id}`}
                 key={unit.id}
                 style={{ left: unit.mapLeft, top: unit.mapTop }}
-              />
+              >
+                <img alt="" className="home-screen__treasure-icon" src={treasureChestIcon} />
+              </div>
             )
           }
 
@@ -145,7 +148,9 @@ export function HomeScreen({
               }}
               style={{ left: unit.mapLeft, top: unit.mapTop }}
               type="button"
-            />
+            >
+              <img alt="" className="home-screen__treasure-icon" src={treasureChestIcon} />
+            </button>
           )
         })}
 
