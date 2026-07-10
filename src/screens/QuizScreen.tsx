@@ -11,6 +11,34 @@ import {
 import { speakText } from '../utils/speech'
 import './QuizScreen.css'
 
+export const CORRECT_FEEDBACK_MESSAGES = [
+  'Great job!',
+  "You're a rock star!",
+  'Awesome work!',
+  'You got it!',
+  'Fantastic!',
+  'Well done!',
+  "You're so smart!",
+  'Nice one!',
+  'Super job!',
+  'You nailed it!',
+]
+
+export const WRONG_FEEDBACK_MESSAGES = [
+  'Try again!',
+  'So close, try again!',
+  'Almost there, give it another try!',
+  'Not quite, try again please!',
+  'Keep trying, you can do it!',
+  'Oops, try once more!',
+  'Nice try, have another go!',
+  'Almost! Try again!',
+]
+
+function pickRandomMessage(messages: string[]): string {
+  return messages[Math.floor(Math.random() * messages.length)]
+}
+
 interface QuizScreenProps {
   unitId: string
   onComplete: (unitId: string, coinsEarned: number) => void
@@ -46,9 +74,10 @@ export function QuizScreen({ unitId, onComplete, onExit }: QuizScreenProps) {
 
   const handleChoiceClick = (choice: number) => {
     const isCorrect = choice === currentQuestion.answer
+    const message = pickRandomMessage(isCorrect ? CORRECT_FEEDBACK_MESSAGES : WRONG_FEEDBACK_MESSAGES)
 
     setSelectedChoice(choice)
-    setFeedbackMessage(isCorrect ? 'Great job! 🎉' : 'Try again!')
+    setFeedbackMessage(message)
 
     if (isCorrect) {
       setAnswered(true)
@@ -57,6 +86,8 @@ export function QuizScreen({ unitId, onComplete, onExit }: QuizScreenProps) {
     } else {
       playWrongSound()
     }
+
+    speakText(message)
   }
 
   const handleNextClick = () => {

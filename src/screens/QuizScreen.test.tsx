@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
-import { QuizScreen } from './QuizScreen'
+import { CORRECT_FEEDBACK_MESSAGES, QuizScreen, WRONG_FEEDBACK_MESSAGES } from './QuizScreen'
 import { speakText } from '../utils/speech'
 
 vi.mock('../utils/speech', () => ({ speakText: vi.fn() }))
@@ -89,5 +89,35 @@ describe('QuizScreen', () => {
     fireEvent.click(screen.getByTestId('next-button'))
 
     expect(speakText).toHaveBeenCalledTimes(2)
+  })
+
+  it('speaks a varied encouragement message and displays it when the answer is correct', () => {
+    vi.mocked(speakText).mockClear()
+
+    render(<QuizScreen onComplete={vi.fn()} onExit={vi.fn()} unitId="unit_1" />)
+
+    const appleCount = screen.getByTestId('visual-objects').querySelectorAll('span').length
+    const buttons = screen.getAllByTestId(/^choice-button-/)
+    const correctButton = buttons.find((button) => button.textContent === String(appleCount))
+    fireEvent.click(correctButton as HTMLElement)
+
+    const shownMessage = screen.getByTestId('quiz-feedback').textContent
+    expect(CORRECT_FEEDBACK_MESSAGES).toContain(shownMessage)
+    expect(speakText).toHaveBeenCalledWith(shownMessage)
+  })
+
+  it('speaks a varied try-again message and displays it when the answer is wrong', () => {
+    vi.mocked(speakText).mockClear()
+
+    render(<QuizScreen onComplete={vi.fn()} onExit={vi.fn()} unitId="unit_1" />)
+
+    const appleCount = screen.getByTestId('visual-objects').querySelectorAll('span').length
+    const buttons = screen.getAllByTestId(/^choice-button-/)
+    const wrongButton = buttons.find((button) => button.textContent !== String(appleCount))
+    fireEvent.click(wrongButton as HTMLElement)
+
+    const shownMessage = screen.getByTestId('quiz-feedback').textContent
+    expect(WRONG_FEEDBACK_MESSAGES).toContain(shownMessage)
+    expect(speakText).toHaveBeenCalledWith(shownMessage)
   })
 })
