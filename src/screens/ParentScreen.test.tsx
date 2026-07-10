@@ -29,7 +29,9 @@ describe('ParentScreen', () => {
   it('shows treasure progress rows and closes back to the island', () => {
     const onClose = vi.fn()
 
-    render(<ParentScreen profile={buildProfile()} onClose={onClose} />)
+    render(
+      <ParentScreen profile={buildProfile()} onClose={onClose} onResetProgress={vi.fn()} />,
+    )
 
     fireEvent.click(screen.getByTestId('view-details-toggle'))
 
@@ -45,5 +47,24 @@ describe('ParentScreen', () => {
     fireEvent.click(screen.getByTestId('back-to-island-from-parent-button'))
 
     expect(onClose).toHaveBeenCalledTimes(1)
+  })
+
+  it('resets progress only after the parent confirms', () => {
+    const onResetProgress = vi.fn()
+    const confirmSpy = vi.spyOn(window, 'confirm')
+
+    render(
+      <ParentScreen profile={buildProfile()} onClose={vi.fn()} onResetProgress={onResetProgress} />,
+    )
+
+    confirmSpy.mockReturnValueOnce(false)
+    fireEvent.click(screen.getByTestId('reset-progress-button'))
+    expect(onResetProgress).not.toHaveBeenCalled()
+
+    confirmSpy.mockReturnValueOnce(true)
+    fireEvent.click(screen.getByTestId('reset-progress-button'))
+    expect(onResetProgress).toHaveBeenCalledTimes(1)
+
+    confirmSpy.mockRestore()
   })
 })

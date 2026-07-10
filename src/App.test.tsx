@@ -96,4 +96,24 @@ describe('App', () => {
 
     expect(screen.queryByTestId('island-complete-screen')).toBeNull()
   })
+
+  it('resets all progress from the parent dashboard after confirming', () => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(buildAllButLastCompletedProfile()))
+    const confirmSpy = vi.spyOn(window, 'confirm').mockReturnValue(true)
+
+    render(<App />)
+
+    fireEvent.click(screen.getByText('Parents'))
+    fireEvent.click(screen.getByTestId('reset-progress-button'))
+    fireEvent.click(screen.getByTestId('back-to-island-from-parent-button'))
+
+    expect(screen.getByTestId('play-button-unit_1')).not.toBeNull()
+    expect(screen.queryByTestId('play-button-unit_16')).toBeNull()
+    expect(screen.getByTestId('locked-unit_16')).not.toBeNull()
+
+    const storedProfile = JSON.parse(localStorage.getItem(STORAGE_KEY) as string)
+    expect(storedProfile.bells).toBe(0)
+
+    confirmSpy.mockRestore()
+  })
 })

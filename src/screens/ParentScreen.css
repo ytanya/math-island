@@ -35,6 +35,12 @@
   margin: 0;
 }
 
+.parent-screen__header-actions {
+  align-items: center;
+  display: flex;
+  gap: 12px;
+}
+
 .parent-screen__table {
   min-width: 640px;
 }

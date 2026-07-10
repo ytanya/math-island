@@ -102,6 +102,12 @@ export const saveProfile = (profile: ChildProfile): void => {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(profile))
 }
 
+export const resetProfile = (): ChildProfile => {
+  const defaultProfile = createDefaultProfile()
+  saveProfile(defaultProfile)
+  return defaultProfile
+}
+
 export interface CompleteTreasureResult {
   profile: ChildProfile
   coinsAwarded: number

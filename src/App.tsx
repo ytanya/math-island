@@ -9,7 +9,7 @@ import { HomeScreen } from './screens/HomeScreen';
 import { IslandCompleteScreen } from './screens/IslandCompleteScreen';
 import { ParentScreen } from './screens/ParentScreen';
 import { QuizScreen } from './screens/QuizScreen';
-import { completeTreasure, loadProfile, saveProfile } from './store/profileStore';
+import { completeTreasure, loadProfile, resetProfile, saveProfile } from './store/profileStore';
 import { isMusicEnabled, startBackgroundMusic } from './utils/sound';
 
 interface PendingCoinAnimation {
@@ -68,6 +68,13 @@ export default function App() {
     }
   };
 
+  const handleResetProgress = () => {
+    const freshProfile = resetProfile();
+    setProfile(freshProfile);
+    setPendingCoinAnimation(null);
+    setIslandJustCompleted(false);
+  };
+
   const handleCoinAnimationComplete = () => {
     setPendingCoinAnimation(null);
 
@@ -84,7 +91,13 @@ export default function App() {
   }
 
   if (showParents) {
-    return <ParentScreen profile={profile} onClose={() => setShowParents(false)} />;
+    return (
+      <ParentScreen
+        onClose={() => setShowParents(false)}
+        onResetProgress={handleResetProgress}
+        profile={profile}
+      />
+    );
   }
 
   if (activeUnitId !== null) {

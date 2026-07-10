@@ -11,6 +11,7 @@ import './ParentScreen.css'
 interface ParentScreenProps {
   profile: ChildProfile
   onClose: () => void
+  onResetProgress: () => void
 }
 
 interface TreasureRow extends Record<string, unknown> {
@@ -51,8 +52,18 @@ const getRowProps = (
   return rowProps
 }
 
-export function ParentScreen({ profile, onClose }: ParentScreenProps) {
+export function ParentScreen({ profile, onClose, onResetProgress }: ParentScreenProps) {
   const rows = buildRows(profile)
+
+  const handleResetClick = () => {
+    const confirmed = window.confirm(
+      `This will erase all of ${profile.name}'s progress and bells. This can't be undone. Continue?`,
+    )
+
+    if (confirmed) {
+      onResetProgress()
+    }
+  }
 
   return (
     <main className="parent-screen" data-testid="parent-screen">
@@ -62,14 +73,25 @@ export function ParentScreen({ profile, onClose }: ParentScreenProps) {
           <h1>{profile.name}'s Progress</h1>
         </div>
 
-        <Button
-          data-testid="back-to-island-from-parent-button"
-          htmlType="button"
-          onClick={onClose}
-          type="primary"
-        >
-          Back to Island
-        </Button>
+        <div className="parent-screen__header-actions">
+          <Button
+            data-testid="reset-progress-button"
+            htmlType="button"
+            onClick={handleResetClick}
+            type="text"
+          >
+            Reset Progress
+          </Button>
+
+          <Button
+            data-testid="back-to-island-from-parent-button"
+            htmlType="button"
+            onClick={onClose}
+            type="primary"
+          >
+            Back to Island
+          </Button>
+        </div>
       </header>
 
       <Collapse
