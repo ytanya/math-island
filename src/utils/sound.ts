@@ -245,6 +245,23 @@ export function playCoinSound() {
   )
 }
 
+export function playIslandCompleteFanfare() {
+  playTones(
+    [
+      { frequency: 523.25, startTime: 0, duration: 0.16 },
+      { frequency: 659.25, startTime: 0.14, duration: 0.16 },
+      { frequency: 783.99, startTime: 0.28, duration: 0.16 },
+      { frequency: 1046.5, startTime: 0.42, duration: 0.2 },
+      { frequency: 1318.51, startTime: 0.62, duration: 0.6 },
+      { frequency: 1046.5, startTime: 0.62, duration: 0.6 },
+      { frequency: 783.99, startTime: 0.62, duration: 0.6 },
+      { frequency: 659.25, startTime: 0.62, duration: 0.6 },
+    ],
+    'triangle',
+    0.2,
+  )
+}
+
 export function playTreasureUnlockSound() {
   playTones(
     [

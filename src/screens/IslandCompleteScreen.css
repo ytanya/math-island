@@ -1,0 +1,95 @@
+.island-complete {
+  align-items: center;
+  background: linear-gradient(180deg, #7ec8e3 0%, #a7ddf0 45%, #ffe9b0 100%);
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  min-height: 100svh;
+  overflow: hidden;
+  padding: 24px;
+  position: relative;
+  width: 100%;
+}
+
+.island-complete__confetti {
+  height: 100%;
+  left: 0;
+  overflow: hidden;
+  pointer-events: none;
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+
+.island-complete__confetti-piece {
+  animation-iteration-count: infinite;
+  animation-name: island-complete-fall;
+  animation-timing-function: linear;
+  border-radius: 3px;
+  height: 14px;
+  opacity: 0.9;
+  position: absolute;
+  top: -20px;
+  width: 10px;
+}
+
+@keyframes island-complete-fall {
+  0% {
+    opacity: 0.95;
+    transform: translateY(0) rotate(0deg);
+  }
+  100% {
+    opacity: 0.7;
+    transform: translateY(110vh) rotate(360deg);
+  }
+}
+
+.island-complete__card {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 480px;
+  padding: 40px 32px;
+  position: relative;
+  text-align: center;
+  z-index: 1;
+}
+
+.island-complete__trophy {
+  font-size: 72px;
+  line-height: 1;
+}
+
+.island-complete__title {
+  color: var(--animal-text-color);
+  font-size: 40px;
+  font-weight: 900;
+  margin: 0;
+}
+
+.island-complete__message {
+  color: var(--animal-text-color);
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.4;
+  margin: 0;
+}
+
+@media (max-width: 720px) {
+  .island-complete__card {
+    padding: 32px 20px;
+  }
+
+  .island-complete__trophy {
+    font-size: 56px;
+  }
+
+  .island-complete__title {
+    font-size: 32px;
+  }
+
+  .island-complete__message {
+    font-size: 16px;
+  }
+}

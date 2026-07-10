@@ -6,6 +6,7 @@ import {
   getNextUnitId,
 } from './curriculums/cambridgePrimaryMathBook1';
 import { HomeScreen } from './screens/HomeScreen';
+import { IslandCompleteScreen } from './screens/IslandCompleteScreen';
 import { ParentScreen } from './screens/ParentScreen';
 import { QuizScreen } from './screens/QuizScreen';
 import { completeTreasure, loadProfile, saveProfile } from './store/profileStore';
@@ -23,6 +24,8 @@ export default function App() {
   const [pendingCoinAnimation, setPendingCoinAnimation] = useState<PendingCoinAnimation | null>(
     null,
   );
+  const [islandJustCompleted, setIslandJustCompleted] = useState(false);
+  const [showIslandComplete, setShowIslandComplete] = useState(false);
 
   useEffect(() => {
     const startMusicOnFirstGesture = () => {
@@ -58,8 +61,27 @@ export default function App() {
 
     if (coinsAwarded > 0) {
       setPendingCoinAnimation({ unitId, coinsEarned: coinsAwarded });
+
+      if (nextUnitId === null) {
+        setIslandJustCompleted(true);
+      }
     }
   };
+
+  const handleCoinAnimationComplete = () => {
+    setPendingCoinAnimation(null);
+
+    if (islandJustCompleted) {
+      setIslandJustCompleted(false);
+      setShowIslandComplete(true);
+    }
+  };
+
+  if (showIslandComplete) {
+    return (
+      <IslandCompleteScreen bells={profile.bells} onClose={() => setShowIslandComplete(false)} />
+    );
+  }
 
   if (showParents) {
     return <ParentScreen profile={profile} onClose={() => setShowParents(false)} />;
@@ -77,7 +99,7 @@ export default function App() {
 
   return (
     <HomeScreen
-      onCoinAnimationComplete={() => setPendingCoinAnimation(null)}
+      onCoinAnimationComplete={handleCoinAnimationComplete}
       onOpenParents={() => setShowParents(true)}
       onPlayTreasure={setActiveUnitId}
       pendingCoinAnimation={pendingCoinAnimation}
