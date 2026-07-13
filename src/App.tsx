@@ -4,9 +4,11 @@ import {
   CAMBRIDGE_PRIMARY_MATH_BOOK1,
   CAMBRIDGE_PRIMARY_MATH_BOOK1_ID,
   getNextUnitId,
+  getUnitById,
 } from './curriculums/cambridgePrimaryMathBook1';
 import { HomeScreen } from './screens/HomeScreen';
 import { IslandCompleteScreen } from './screens/IslandCompleteScreen';
+import { LessonScreen } from './screens/LessonScreen';
 import { ParentScreen } from './screens/ParentScreen';
 import { QuizScreen } from './screens/QuizScreen';
 import { completeTreasure, loadProfile, resetProfile, saveProfile } from './store/profileStore';
@@ -20,6 +22,7 @@ interface PendingCoinAnimation {
 export default function App() {
   const [profile, setProfile] = useState(() => loadProfile());
   const [activeUnitId, setActiveUnitId] = useState<string | null>(null);
+  const [lessonUnitId, setLessonUnitId] = useState<string | null>(null);
   const [showParents, setShowParents] = useState(false);
   const [pendingCoinAnimation, setPendingCoinAnimation] = useState<PendingCoinAnimation | null>(
     null,
@@ -68,6 +71,22 @@ export default function App() {
     }
   };
 
+  const handlePlayTreasure = (unitId: string) => {
+    const unit = getUnitById(CAMBRIDGE_PRIMARY_MATH_BOOK1, unitId);
+
+    if (unit?.lessonSlides && unit.lessonSlides.length > 0) {
+      setLessonUnitId(unitId);
+      return;
+    }
+
+    setActiveUnitId(unitId);
+  };
+
+  const handleLessonFinish = () => {
+    setActiveUnitId(lessonUnitId);
+    setLessonUnitId(null);
+  };
+
   const handleResetProgress = () => {
     const freshProfile = resetProfile();
     setProfile(freshProfile);
@@ -100,6 +119,14 @@ export default function App() {
     );
   }
 
+  if (lessonUnitId !== null) {
+    const lessonUnit = getUnitById(CAMBRIDGE_PRIMARY_MATH_BOOK1, lessonUnitId);
+
+    return (
+      <LessonScreen slides={lessonUnit?.lessonSlides ?? []} onFinish={handleLessonFinish} />
+    );
+  }
+
   if (activeUnitId !== null) {
     return (
       <QuizScreen
@@ -114,7 +141,7 @@ export default function App() {
     <HomeScreen
       onCoinAnimationComplete={handleCoinAnimationComplete}
       onOpenParents={() => setShowParents(true)}
-      onPlayTreasure={setActiveUnitId}
+      onPlayTreasure={handlePlayTreasure}
       pendingCoinAnimation={pendingCoinAnimation}
       profile={profile}
     />

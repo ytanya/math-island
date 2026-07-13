@@ -12,6 +12,7 @@ export interface CurriculumUnit {
   mapLeft: string
   mapTop: string
   questions: TreasureQuestion[]
+  lessonSlides?: string[]
 }
 
 export interface Curriculum {

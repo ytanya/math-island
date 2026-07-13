@@ -70,6 +70,7 @@ describe('App', () => {
     render(<App />)
 
     fireEvent.click(screen.getByTestId(`play-button-${lastUnit.id}`))
+    fireEvent.click(screen.getByTestId('lesson-cancel-button'))
     answerAllQuestionsCorrectly(lastUnit)
     fireEvent.click(screen.getByTestId('back-to-island-button'))
 
@@ -87,6 +88,7 @@ describe('App', () => {
     render(<App />)
 
     fireEvent.click(screen.getByTestId(`play-button-${secondUnit.id}`))
+    fireEvent.click(screen.getByTestId('lesson-cancel-button'))
     answerAllQuestionsCorrectly(secondUnit)
     fireEvent.click(screen.getByTestId('back-to-island-button'))
 
@@ -95,6 +97,25 @@ describe('App', () => {
     })
 
     expect(screen.queryByTestId('island-complete-screen')).toBeNull()
+  })
+
+  it('shows the lesson screen before the quiz and reaches the quiz after clicking through all slides', () => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(buildOnlyFirstCompletedProfile()))
+
+    render(<App />)
+
+    fireEvent.click(screen.getByTestId(`play-button-${secondUnit.id}`))
+
+    expect(screen.getByTestId('lesson-screen')).not.toBeNull()
+    expect(screen.queryByTestId('quiz-screen')).toBeNull()
+
+    const slideCount = secondUnit.lessonSlides?.length ?? 0
+    for (let i = 0; i < slideCount; i += 1) {
+      fireEvent.click(screen.getByTestId('lesson-next-button'))
+    }
+
+    expect(screen.queryByTestId('lesson-screen')).toBeNull()
+    expect(screen.getByTestId('quiz-screen')).not.toBeNull()
   })
 
   it('resets all progress from the parent dashboard after confirming', () => {

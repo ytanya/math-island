@@ -1,0 +1,71 @@
+.lesson-screen {
+  align-items: center;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  min-height: 100svh;
+  padding: 24px;
+  width: 100%;
+}
+
+.lesson-screen__card {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  max-width: 520px;
+  padding: 40px 32px;
+  text-align: center;
+  width: 100%;
+}
+
+.lesson-screen__eyebrow {
+  color: var(--animal-text-color-secondary);
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.lesson-screen__slide-text {
+  color: var(--animal-text-color);
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.4;
+  margin: 0;
+  min-height: 100px;
+}
+
+.lesson-screen__dots {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.lesson-screen__dot {
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 50%;
+  height: 10px;
+  width: 10px;
+}
+
+.lesson-screen__dot--active {
+  background: var(--animal-text-color);
+}
+
+.lesson-screen__footer {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+}
+
+@media (max-width: 720px) {
+  .lesson-screen__card {
+    padding: 32px 20px;
+  }
+
+  .lesson-screen__slide-text {
+    font-size: 20px;
+    min-height: 80px;
+  }
+}
