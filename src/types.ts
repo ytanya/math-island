@@ -6,13 +6,18 @@ export interface TreasureQuestion {
   visualCount?: number
 }
 
+export interface LessonSlide {
+  text: string
+  emoji: string
+}
+
 export interface CurriculumUnit {
   id: string
   name: string
   mapLeft: string
   mapTop: string
   questions: TreasureQuestion[]
-  lessonSlides?: string[]
+  lessonSlides?: LessonSlide[]
 }
 
 export interface Curriculum {
